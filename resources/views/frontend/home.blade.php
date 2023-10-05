@@ -7,7 +7,7 @@
       <!--
         - #HERO
       -->
-    <header  class="hero_main">
+    <header  class="">
     <a href="{{ $banners->first()->link }}">
       <section class="section hero" style="background-image: url('{{ asset('uplode/banner') }}/{{ $banners->first()->image }}">
         <div class="container">
