@@ -40,31 +40,6 @@
   -->
   <link rel="preload" href="{{ asset('frontend') }}/assets/images/hero-banner.png" as="image">
 
-  <style>
-    ::-webkit-input-placeholder {
-      font-size: 16px;
-    }
-    input[type=text] {
-      font-size: 16px;
-    }
-    input[type=email] {
-      font-size: 16px;
-    }
-    input[type=password] {
-      font-size: 16px;
-    }
-    input[type=number] {
-      font-size: 16px;
-    }
-    textarea {
-    font-size: 16px !important;
-    }
-    select {
-      font-size: 16px !important;
-    }
-
-  </style>
-
 </head>
 
 <body id="top">
