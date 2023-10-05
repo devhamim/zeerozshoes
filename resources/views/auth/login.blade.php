@@ -7,9 +7,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Revel eCommerce Admin</title>
-    
-    <link rel="shortcut icon" href="favicon.png">
+    <title>{{ $settings->first()->title }}</title>
+
+    <link rel="shortcut icon" href="{{ asset('uplode/logo/fav') }}/{{ $settings->first()->favicon }}" type="image/svg+xml">
     <link rel="stylesheet" href="{{ asset('backend') }}/dashboad/assets/vendor/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/dashboad/assets/vendor/css/OverlayScrollbars.min.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/dashboad/assets/vendor/css/bootstrap.min.css">
@@ -24,13 +24,13 @@
         <div class="login-body">
             <div class="top d-flex justify-content-between align-items-center">
                 <div class="logo">
-                    <img src="{{ asset('backend') }}/dashboad/assets/images/logo-black.png" alt="Logo">
+                    <img width="250px" src="{{ asset('uplode/logo') }}/{{ $settings->first()->logo }}" alt="Logo">
                 </div>
                 <a href="{{ url('/') }}"><i class="fa-duotone fa-house-chimney"></i></a>
             </div>
             <div class="bottom">
                 <h3 class="panel-title">Login</h3>
-                
+
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="input-group mb-30">
@@ -62,14 +62,14 @@
                             </label> --}}
                         </div>
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-white fs-14">Forgot Password?</a>
+                            {{-- <a href="{{ route('password.request') }}" class="text-white fs-14">Forgot Password?</a> --}}
                         @endif
                     </div>
                     <button type="submit" class="btn btn-primary w-100 login-btn">Sign in</button>
-                    
+
                 </form>
-                
-                
+
+
             </div>
         </div>
 
@@ -80,7 +80,7 @@
         <!-- footer end -->
     </div>
     <!-- main content end -->
-    
+
     <script src="{{ asset('backend') }}/dashboad/assets/vendor/js/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('backend') }}/dashboad/assets/vendor/js/jquery.overlayScrollbars.min.js"></script>
     <script src="{{ asset('backend') }}/dashboad/assets/vendor/js/bootstrap.bundle.min.js"></script>

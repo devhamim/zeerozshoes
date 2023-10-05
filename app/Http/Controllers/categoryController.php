@@ -49,6 +49,7 @@ class categoryController extends Controller
             'category_img'=>$file_name,
             'created_at'=>Carbon::now(),
         ]);
+        toast('Add successfully', 'success');
         return back();
 
     }
@@ -100,8 +101,9 @@ class categoryController extends Controller
                 'category_img'=>$file_name,
             ]);
         }
+        toast('update successfully', 'success');
         return redirect()->route('category.index');
-    }   
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -115,6 +117,7 @@ class categoryController extends Controller
 
         //Deleting Item
         category::find($id)->delete();
+        toast('Delete successfully', 'error');
         return back();
     }
 }

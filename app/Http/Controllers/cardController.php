@@ -12,6 +12,11 @@ class cardController extends Controller
 {
      // add_cart
      function add_card(Request $request){
+        $request->validate([
+            'color_id'=>'required',
+            'size_id'=>'required',
+            'quantity'=>'required',
+        ]);
     if(Auth::guard('customerlogin')->id()){
             $quantity = inventory::where('product_id', $request->product_id)->where('color_id', $request->color_id)->where('size_id', $request->size_id)->first()->quantity;
             if($quantity >= $request->quantity){
@@ -64,13 +69,14 @@ class cardController extends Controller
             ]);
 
         }
-        alert('Title','Card update successfully', 'success');
+        toast('Card update successfully', 'success');
         return back();
     }
 
     // cart remove
     function card_remove($card_id){
         card::find($card_id)->delete();
+        toast('Delete successfully', 'error');
         return back();
     }
 }

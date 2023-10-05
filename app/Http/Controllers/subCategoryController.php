@@ -38,7 +38,8 @@ class subCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            '*'=>'required',
+            'name'=>'required',
+            'subcategory_img'=>'required',
         ]);
 
         $subcategory_img = $request->subcategory_img;
@@ -53,6 +54,7 @@ class subCategoryController extends Controller
             'subcategory_img'=>$file_name,
             'created_at'=>Carbon::now(),
         ]);
+        toast('Add Successfully', 'success');
         return back();
     }
 
@@ -107,6 +109,7 @@ class subCategoryController extends Controller
                 'subcategory_img'=>$file_name,
             ]);
         }
+        toast('Update Successfully', 'success');
         return redirect()->route('subcategory.index');
     }
 
@@ -122,6 +125,7 @@ class subCategoryController extends Controller
 
         //Deleting Item
         subCategory::find($id)->delete();
+        toast('Delete Successfully', 'error');
         return back();
     }
 }

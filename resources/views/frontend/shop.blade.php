@@ -11,10 +11,10 @@
                 <div class="text-left py-5 mt-3 mb-3">
                     <h1 class="ft-medium mb-3">Shop</h1>
                     <ul class="shop_categories_list m-0 p-0">
-                        <li><a href="#">Men</a></li>
-                        <li><a href="#">Speakers</a></li>
-                        <li><a href="#">Women</a></li>
-                        <li><a href="#">Accessories</a></li>
+                        <li><a >Men</a></li>
+                        <li><a >Speakers</a></li>
+                        <li><a >Women</a></li>
+                        <li><a >Accessories</a></li>
                     </ul>
                 </div>
             </div>
@@ -52,11 +52,7 @@
                     <div class="search-sidebar-body">
                         <!-- Single Option -->
                         <div class="single_search_boxed">
-                            <div class="col-lg-12">
-                                <div class="form-group px-3">
-                                    <a href="{{ route('shop') }}" class="btn btn-danger form-control">Reset Filter</a>
-                                </div>
-                            </div>
+
                             <div class="widget-boxed-header">
                                 <h4><a href="#pricing" data-toggle="collapse" aria-expanded="false" role="button">Pricing</a></h4>
                             </div>
@@ -94,7 +90,7 @@
                                             <div class="inner_widget_link">
                                                 <ul class="no-ul-list">
                                                     @foreach ($categorys as $category)
-                                                    <li>
+                                                    <li class="d-flex" style="justify-content: space-between; margin-right: 10px">
                                                         <input id="category{{ $category->id }}" class="category_id" name="category_id" type="radio" value="{{ $category->id }}"
                                                         @if(isset($_GET['category_id']))
                                                             @if($_GET['category_id'] == $category->id)
@@ -102,7 +98,8 @@
                                                             @endif
                                                         @endif
                                                         >
-                                                        <label for="category{{ $category->id }}" class="checkbox-custom-label">{{ $category->name }}<span>{{ App\Models\product::where('category_id', $category->id)->count() }}</span></label>
+                                                        <label for="category{{ $category->id }}" class="checkbox-custom-label">{{ $category->name }}</label>
+                                                        <p>{{ App\Models\product::where('category_id', $category->id)->count() }}</p>
                                                     </li>
                                                     @endforeach
                                                 </ul>
@@ -127,7 +124,7 @@
                                                 <ul class="no-ul-list">
 
                                                     @foreach ($brands as $brand)
-                                                    <li>
+                                                    <li class="d-flex" style="justify-content: space-between; margin-right: 10px">
                                                         <input id="brand{{ $brand->id }}" class="brand_id" name="brand_id" type="radio" value="{{ $brand->id }}"
                                                         @if(isset($_GET['brand_id']))
                                                             @if($_GET['brand_id'] == $brand->id)
@@ -135,7 +132,8 @@
                                                             @endif
                                                         @endif
                                                         >
-                                                        <label for="brand{{ $brand->id }}" class="checkbox-custom-label">{{ $brand->name }}<span class="">{{ App\Models\product::where('brand_id', $brand->id)->count() }}</span></label>
+                                                        <label for="brand{{ $brand->id }}" class="checkbox-custom-label">{{ $brand->name }}</label>
+                                                        <p class="">{{ App\Models\product::where('brand_id', $brand->id)->count() }}</p>
                                                     </li>
                                                     @endforeach
 
@@ -159,7 +157,7 @@
                                         <div class="card-body pt-0">
                                             <div class="text-left">
 
-                                                @foreach ($colors as $color)
+                                                @foreach ($colors->skip(1) as $color)
                                                 <div class="  form-check-inline mb-1">
                                                     <input name="color" class="color_idd" id="color{{$color->id}}" value="{{$color->id}}" type="radio"
                                                     @if (isset($_GET['color_id']))
@@ -189,7 +187,7 @@
                                     <div class="single_filter_card">
                                         <div class="card-body pt-0">
                                             <div class="text-left pb-0 pt-2">
-                                                @foreach ($sizes as $size)
+                                                @foreach ($sizes->skip(1) as $size)
                                                 <div class="form-check form-option form-check-inline mb-2">
                                                     <input name="size" class="size_idd" id="size{{$size->id}}" value="{{$size->id}}" type="radio"
                                                     @if (isset($_GET['size_id']))
@@ -208,6 +206,11 @@
                             </div>
                         </div>
 
+                        <div class="col-lg-12">
+                            <div class="form-group px-3 mt-5 text-center">
+                                <a href="{{ route('shop') }}" class="btn btn-danger form-control">Reset Filter</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -222,10 +225,10 @@
                                     <h6 class="mb-0">{{ $products_count }} Items Found</h6>
                                 </div>
 
-                                <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12">
+                                <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
                                     <div class="filter_wraps d-flex align-items-center justify-content-end m-start">
                                         <div class="single_fitres mr-2 br-right">
-                                            <select class="" id="sort" name="sort">
+                                            <select class="form-control" id="sort" name="sort">
                                             <option value="">Default Sorting</option>
                                                 <option {{ @$_GET['sort'] == 1?'selected':'' }} value="1">Sort by: A - Z</option>
                                                 <option {{ @$_GET['sort'] == 2?'selected':'' }} value="2">Sort by: Z - A</option>

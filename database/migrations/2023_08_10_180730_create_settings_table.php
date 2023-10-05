@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('logo');
             $table->string('favicon');
             $table->string('address');
+            $table->string('title');
             $table->string('footer');
             $table->string('facebook')->nullable();
             $table->string('twitter')->nullable();

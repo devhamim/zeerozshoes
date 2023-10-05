@@ -36,6 +36,9 @@ class color_sizeController extends Controller
     public function store(Request $request)
     {
         if($request->btn == 1){
+            $request->validate([
+                'color_code'=>'required',
+            ]);
             color::insert([
                 'name'=>$request->name,
                 'color_code'=>$request->color_code,
@@ -43,11 +46,15 @@ class color_sizeController extends Controller
             ]);
         }
         else{
+            $request->validate([
+                'name'=>'required',
+            ]);
             size::insert([
                 'name'=>$request->name,
                 'created_at'=>Carbon::now(),
             ]);
         }
+        toast('Add successfully', 'success');
         return back();
     }
 
@@ -88,5 +95,6 @@ class color_sizeController extends Controller
             size::find($id)->delete();
             return back();
         }
+            toast('Delete successfully', 'error');
     }
 }

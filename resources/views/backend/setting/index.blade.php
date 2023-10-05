@@ -15,7 +15,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="profile-sidebar-title">Website Information</h5>
                             <div class="dropdown">
-                                
+
                             </div>
                         </div>
                         <div class="top">
@@ -28,7 +28,7 @@
                             <div class="part-txt">
                                 <h4 class="admin-name">{{ $settings->first()->name }}</h4>
                                 <span class="admin-role">
-                                    
+
                                 </span>
                                 <div class="admin-social">
                                     <a href="{{ $settings->first()->facebook }}"><i class="fa-brands fa-facebook-f"></i></a>
@@ -42,12 +42,13 @@
                             <h6 class="profile-sidebar-subtitle">Communication Info</h6>
                             <ul>
                                 <li><span>Full Name:</span>{{ $settings->first()->name }}</li>
+                                <li><span>Title:</span>{{ $settings->first()->title }}</li>
                                 <li><span>Mobile:</span>{{ $settings->first()->phone }}</li>
                                 <li><span>Mail:</span>{{ $settings->first()->email }}</li>
                                 <li><span>Address:</span>{{ $settings->first()->address }}</li>
                                 <li><span>Footer Rights:</span>{{ $settings->first()->footer }}</li>
                             </ul>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -82,7 +83,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-md-4 col-sm-6">
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fa-light fa-envelope"></i></span>
@@ -105,18 +106,14 @@
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fa-light fa-image"></i></span>
                                                 <input type="file" class="form-control" placeholder="Logo" name="logo" value="{{ $settings->first()->logo }}">
-                                                @error('logo')
-                                                    <strong class="text-danger">{{ $message }}</strong>
-                                                @enderror
+
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-sm-12">
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="fa-light fa-image"></i></span>
                                                 <input type="file" class="form-control" placeholder="Favicon" name="favicon" value="{{ $settings->first()->favicon }}">
-                                                @error('favicon')
-                                                    <strong class="text-danger">{{ $message }}</strong>
-                                                @enderror
+
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -125,7 +122,13 @@
                                                     <strong class="text-danger">{{ $message }}</strong>
                                                 @enderror
                                         </div>
-                                        <div class="col-12"> 
+                                        <div class="col-12">
+                                            <textarea class="form-control h-100-p" placeholder="Website Title" name="title">{{ $settings->first()->title }}</textarea>
+                                            @error('title')
+                                                <strong class="text-danger">{{ $message }}</strong>
+                                            @enderror
+                                        </div>
+                                        <div class="col-12">
                                             <textarea class="form-control h-100-p" placeholder="Footer Rights" name="footer">{{ $settings->first()->footer }}</textarea>
                                             @error('footer')
                                                 <strong class="text-danger">{{ $message }}</strong>
@@ -162,7 +165,7 @@
                                                 <input type="url" class="form-control" placeholder="Instagram" name="instagram">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-12">
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                         </div>
@@ -170,7 +173,7 @@
                                 </div>
                             </form>
                         </div>
-                     
+
                     </div>
                 </div>
             </div>

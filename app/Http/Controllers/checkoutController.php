@@ -30,7 +30,11 @@ class checkoutController extends Controller
     function orders_stores(Request $request){
 
         $request->validate([
-            '*'=>'required',
+            'name'=>'required',
+            'email'=>'required',
+            'mobile'=>'required',
+            'address'=>'required',
+            'charge'=>'required',
         ]);
 
         // cash on delivery
@@ -98,7 +102,7 @@ class checkoutController extends Controller
             return view('frontend.order_success');
         }
         else{
-            echo 'nai';
+            return redirect('/');
         }
     }
 }

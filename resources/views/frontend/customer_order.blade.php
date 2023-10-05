@@ -29,7 +29,7 @@
                     <div class="dashboard_author px-2 py-5">
                         <div class="dash_auth_thumb circle p-1 border d-inline-flex mx-auto mb-2">
                             @if(Auth::guard('customerlogin')->user()->photo == null)
-                                {{-- <img width="50" src="{{ Avatar::create(Auth::guard('customerlogin')->user()->name)->toBase64() }}" /> --}}
+                                <img width="50" src="{{ Avatar::create(Auth::guard('customerlogin')->user()->name)->toBase64() }}" />
                             @else
                                 <img src="{{ asset('uplode/customerprofile/') }}/{{ Auth::guard('customerlogin')->user()->photo }}" class="img-fluid circle" width="100" alt="" />
                             @endif
@@ -63,7 +63,7 @@
                             <h6 class="mb-0 ft-medium">{{ $order->order_id }}</h6>
                         </div>
                         <div>
-                            {{-- <a href="{{ route('invoice.download', $order->id) }}" class="badge badge-success p-2">invoice Download</a> --}}
+                            <a href="{{ route('invoice.download', $order->id) }}" class="badge badge-success p-2">invoice Download</a>
                         </div>
                         <div class="">
                             <p class="mb-1 p-0"><span class="text-muted">Status</span></p>
@@ -128,9 +128,7 @@
                             <div class="olf_flex_inner">
                                 <p class="m-0 p-0"><span class="text-muted medium text-left">Order Date: {{ $order->created_at->format('d-m-Y') }}</span></p>
                             </div>
-                            <div class="olf_flex_inner">
-                                <p class="m-0 p-0"><span class="text-muted medium text-left">Discount: {{ number_format($order->discount) }}</span></p>
-                            </div>
+
                             <div class="olf_flex_inner">
                                 <p class="m-0 p-0"><span class="text-muted medium text-left">Charge: {{ $order->charge }}</span></p>
                             </div>

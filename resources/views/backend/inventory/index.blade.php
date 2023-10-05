@@ -20,7 +20,7 @@
                                     <label class="form-label">Product Name</label>
                                     <input type="hidden" name="product_id" value="{{ $products->id }}">
                                     <input type="text" class="form-control form-control-sm" value="{{ $products->title }}" readonly>
-                                    
+
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label">Color</label>
@@ -54,7 +54,7 @@
                                     @enderror
 
                                 </div>
-                                
+
                                 <div class="col-12 d-flex justify-content-end">
                                     <div class="btn-box">
                                         <button type="submit" class="btn btn-sm btn-primary">Save Category</button>
@@ -71,14 +71,14 @@
                         <h5>All Inventory</h5>
                         <div class="btn-box d-flex gap-2">
                             <div id="tableSearch"></div>
-                            
+
                         </div>
                     </div>
                     <div class="panel-body">
                         <div class="table-filter-option">
                             <div class="row justify-content-between g-3">
                                 <div class="col-xxl-4 col-6 col-xs-12">
-                                    
+
                                 </div>
                                 <div class="col-xl-2 col-3 col-xs-12 d-flex justify-content-end">
                                     <div id="productTableLength"></div>
@@ -88,7 +88,7 @@
                         <table class="table table-dashed table-hover digi-dataTable all-product-table table-striped" id="allProductTable">
                             <thead>
                                 <tr>
-                                    
+
                                     <th>Product</th>
                                     <th>Color</th>
                                     <th>Size</th>
@@ -97,9 +97,12 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $quantitys=0;
+                                @endphp
                                 @foreach ($inventorys as $inventory)
                                     <tr>
-                                        
+
                                         <td><span class="">{{ $inventory->rel_to_pro->title }}</span></td>
                                         @if($inventory->color_id != null)
                                             <td><span class=" px-3 py-1" style="background: {{ $inventory->rel_to_color->color_code }}">{{ $inventory->rel_to_color->name }}</span></td>
@@ -111,11 +114,13 @@
                                         @else
                                             <td><span class="">{{ $inventory->rel_to_size->name }}</span></td>
                                         @endif
-                                        <td><span class="">{{ $inventory->quantity }}</span></td>
-                                        
+                                        <td><span class="">{{ $inventory->quantity }} P</span></td>
+                                        @php
+                                            $quantitys += $inventory->quantity
+                                        @endphp
                                         <td>
                                             <div class="btn-box">
-                                                
+
                                                 <form action="{{ route('inventory.destroy', $inventory->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
@@ -135,6 +140,13 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Total: </td>
+                                <td>{{ $quantitys }} P</td>
+                                <td></td>
+                            </tr>
                         </table>
                         <div class="table-bottom-control"></div>
                     </div>

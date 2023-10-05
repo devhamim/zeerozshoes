@@ -23,7 +23,7 @@
                                         <strong class="text-danger">{{ $message }}</strong>
                                     @enderror
                                 </div>
-                                
+
                                 <div class="col-12">
                                     <div class="upload-category-thumbnail">
                                         <label class="form-label" id="addCatThumb">Add Brand Thumbnail</label>
@@ -49,14 +49,14 @@
                         <h5>All Brands</h5>
                         <div class="btn-box d-flex gap-2">
                             <div id="tableSearch"></div>
-                            
+
                         </div>
                     </div>
                     <div class="panel-body">
                         <div class="table-filter-option">
                             <div class="row justify-content-between g-3">
                                 <div class="col-xxl-4 col-6 col-xs-12">
-                                    
+
                                 </div>
                                 <div class="col-xl-2 col-3 col-xs-12 d-flex justify-content-end">
                                     <div id="productTableLength"></div>
@@ -73,7 +73,7 @@
                             <tbody>
                                 @foreach ($brands as $brand)
                                 <tr>
-                                    
+
                                     <td>
                                         <div class="table-category-card">
                                             <div class="part-icon">
@@ -84,10 +84,9 @@
                                             </div>
                                         </div>
                                     </td>
-                                    
+
                                     <td>
                                         <div class="btn-box">
-                                            <button><i class="fa-light fa-eye"></i></button>
                                             <a href="{{ route('brand.edit', $brand->id) }}"><i class="fa-light fa-pen-to-square"></i></a>
                                             <form action="{{ route('brand.destroy', $brand->id) }}" method="POST">
                                                 @csrf
@@ -96,7 +95,7 @@
                                                     <i class="fa-light fa-trash"></i>
                                                 </button>
                                             </form>
-                                            
+
                                         </div>
                                     </td>
                                 </tr>

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\aboutsController;
+use App\Http\Controllers\adController;
+use App\Http\Controllers\bannerController;
 use App\Http\Controllers\brandController;
 use App\Http\Controllers\cardController;
 use App\Http\Controllers\categoryController;
@@ -7,9 +10,12 @@ use App\Http\Controllers\checkoutController;
 use App\Http\Controllers\color_sizeController;
 use App\Http\Controllers\customerlistController;
 use App\Http\Controllers\customerloginController;
+use App\Http\Controllers\customermessageController;
 use App\Http\Controllers\customerregController;
 use App\Http\Controllers\frontendController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\inventoryController;
+use App\Http\Controllers\invoiceController;
 use App\Http\Controllers\mailController;
 use App\Http\Controllers\orderController;
 use App\Http\Controllers\productController;
@@ -47,7 +53,7 @@ Route::get('/customer/order', [frontendController::class, 'customer_order'])->na
 Route::get('/wishlist', [frontendController::class, 'wishlist'])->name('wishlist');
 Route::get('/singel/product/{slug}', [frontendController::class, 'singel_product'])->name('singel.product');
 Route::get('/reg/login', [frontendController::class, 'reg_login'])->name('reg.login');
-Route::post('/profile/store', [frontendController::class, 'profile_store'])->name('profile.store');
+Route::post('/customer/store', [frontendController::class, 'customer_store'])->name('customer.store');
 
 
 // card
@@ -65,12 +71,13 @@ Route::get('/checkout', [checkoutController::class, 'checkout'])->name('checkout
 Route::post('/orders_stores', [checkoutController::class, 'orders_stores'])->name('orders_stores');
 Route::get('/order-success', [checkoutController::class, 'order_success'])->name('order-success');
 
-
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+// user list
+Route::get('/user/list', [HomeController::class, 'user_list'])->name('user.list');
+Route::post('/user/register', [HomeController::class, 'user_register'])->name('user.register');
+Route::get('/user/delete{id}', [HomeController::class, 'user_delete'])->name('user.delete');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::resources([
@@ -84,12 +91,21 @@ Route::group(['middleware' => 'auth'], function () {
         'order' => orderController::class,
         'profile' => profileController::class,
         'setting' => settingController::class,
+        'customermessage' => customermessageController::class,
+        'abouts' => aboutsController::class,
+        'banner' => bannerController::class,
+        'adbanner' => adController::class,
     ]);
 });
+
+// product
+Route::post('/product/status', [productController::class, 'product_status'])->name('product.status');
 
 // profile
 Route::post('/profile/password/{id}', [profileController::class, 'profile_password'])->name('profile.password');
 
+// customer message
+Route::post('/customer/message', [frontendController::class, 'customer_message'])->name('customer.message');
 
 // order
 Route::post('/order/status/{id}', [orderController::class, 'order_status'])->name('order.status');
@@ -114,3 +130,6 @@ Route::get('/customer/logout', [customerloginController::class, 'customer_logout
 
 // shop search
 Route::get('/shop', [shopController::class, 'shop'])->name('shop');
+
+// invoice.download
+Route::get('/invoice/download/{order_id}', [invoiceController::class, 'invoice_download'])->name('invoice.download');

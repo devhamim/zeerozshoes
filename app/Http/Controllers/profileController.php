@@ -57,9 +57,7 @@ class profileController extends Controller
     public function update(Request $request, string $id)
     {
         $users = User::all();
-        // print_r($users);
-        // print_r($request->all());
-        // die();
+
         if($request->photo == ''){
             User::find(Auth::user()->id)->update([
                 'name'=>$request->name,
@@ -78,7 +76,7 @@ class profileController extends Controller
             $extension = $profile_img->getClientOriginalExtension();
             $file_name = Auth::user()->id.'.'.$extension;
             Image::make($profile_img)->resize(720, 720)->save(public_path('uplode/profile/'.$file_name));
-            
+
             User::find(Auth::user()->id)->update([
                 'name'=>$request->name,
                 'email'=>$request->email,

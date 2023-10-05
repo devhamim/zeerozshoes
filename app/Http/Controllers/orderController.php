@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\billingdetailss;
 use App\Models\order;
 use App\Models\orderproduct;
 use Illuminate\Http\Request;
@@ -14,10 +15,10 @@ class orderController extends Controller
     public function index()
     {
         $orders = order::all();
-        $order_product = orderproduct::where('order_id', $orders->first()->order_id)->get();
+        // $order_product = orderproduct::where('order_id', $orders->first()->order_id)->get();
         return view('backend.order.index', [
             'orders'=>$orders,
-            'order_product'=>$order_product,
+            // 'order_product'=>$order_product,
         ]);
     }
 
@@ -52,9 +53,12 @@ class orderController extends Controller
     {
         // $orders = order::find($order_id);
         $order_product = orderproduct::where('order_id', $order_id)->get();
-
+        $billingdetails = billingdetailss::where('order_id', $order_id)->get();
+        $orders = order::where('order_id', $order_id)->get();
         return view('backend.order.orderproduct', [
             'order_product'=>$order_product,
+            'billingdetails'=>$billingdetails,
+            'orders'=>$orders,
         ]);
     }
 
@@ -78,11 +82,10 @@ class orderController extends Controller
     public function destroy(string $id)
     {
         order::find($id)->delete();
-        
 
         toast('Order delete successfully','error');
         return back();
-    } 
+    }
     /**
      * Remove the specified resource from storage.
      */

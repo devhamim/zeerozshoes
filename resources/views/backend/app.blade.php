@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard | Revel eCommerce Admin</title>
+    <title>{{ $settings->first()->title }}</title>
     
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="{{ asset('uplode/logo/fav') }}/{{ $settings->first()->favicon }}">
     <link rel="stylesheet" href="{{ asset('backend') }}/dashboad/assets/vendor/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/dashboad/assets/vendor/css/OverlayScrollbars.min.css">
     <link rel="stylesheet" href="{{ asset('backend') }}/dashboad/assets/vendor/css/jquery.dataTables.min.css">

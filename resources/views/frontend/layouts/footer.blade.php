@@ -58,7 +58,7 @@
             </li>
 
             <li>
-              <a href="{{ $settings->first()->number }}" class="footer-link">
+              <a  class="footer-link">
                 <ion-icon name="call"></ion-icon>
 
                 <span class="footer-link-text">{{ $settings->first()->phone }}</span>
@@ -66,7 +66,7 @@
             </li>
 
             <li>
-              <a href="{{ $settings->first()->email }}" class="footer-link">
+              <a class="footer-link">
                 <ion-icon name="mail"></ion-icon>
 
                 <span class="footer-link-text">{{ $settings->first()->email }}</span>
@@ -98,10 +98,10 @@
             </li>
 
             <li>
-              <a href="{{ route('wishlist') }}" class="footer-link">
+              <a href="{{ route('contact') }}" class="footer-link">
                 <ion-icon name="chevron-forward-outline"></ion-icon>
 
-                <span class="footer-link-text">Wishlist</span>
+                <span class="footer-link-text">Contact</span>
               </a>
             </li>
 

@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 @section('content')
-		
+
 			<!-- ======================= Top Breadcrubms ======================== -->
 			<div class="gray py-3 pt-5">
 				<div class="container">
@@ -18,12 +18,12 @@
 				</div>
 			</div>
 			<!-- ======================= Top Breadcrubms ======================== -->
-			
+
 			<!-- ======================= Product Detail ======================== -->
 			<section class="middle">
 				<div class="container">
 					<div class="row">
-					
+
 						<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
 							<div class="sp-wrap">
 								@foreach ($gallerys as $gallery)
@@ -33,25 +33,25 @@
 										</a>
 									</div>
 								@endforeach
-								
+
 							</div>
 						</div>
 
 						<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
 							<div class="prd_details">
-								
-								<div class="prt_01 mb-2"><span class="text-success bg-light-success rounded px-2 py-1">{{ $products->first()->rel_to_cat->name }}</span></div>
+
+								<div class="prt_01 mb-2"><span class="text-success bg-light-success rounded px-2 py-1">{{ $products->first()->rel_to_brand->name }}</span></div>
 								<div class="prt_02 mb-3">
 									<h2 class="ft-bold mb-1">{{ $products->first()->title }}</h2>
 									<div class="text-left" >
 										<div class="elis_rty"><span class="ft-medium text-muted line-through fs-md mr-2 ">{{ $products->first()->price }}Tk</span><span class="ft-bold theme-cl fs-lg">{{ $products->first()->total_price }}Tk</span></div>
 									</div>
 								</div>
-								
+
 								<div class="prt_03 mb-4">
 									<p>{{ $products->first()->sort_desp }}</p>
 								</div>
-								
+
 								<div class="prt_04 mb-4">
 									<p class="d-flex align-items-center mb-1">Category:<strong class="fs-sm text-dark ft-medium ml-1">{{ $products->first()->rel_to_cat->name }}, {{ $products->first()->rel_to_subcat->name }}</strong></p>
 									{{-- <p class="d-flex align-items-center mb-0">SKU:<strong class="fs-sm text-dark ft-medium ml-1">KUMO42568</strong></p> --}}
@@ -74,17 +74,17 @@
 												<strong class="text-danger">Not Available</strong>
 												<input type="hidden" value="1" name="color_id">
 											@endif
-			
+
 											@php
 												$color = $color->rel_to_color->color_code;
 											@endphp
 										@endforeach
 									</div>
-									@error('color_id')
-										<strong class="text-danger">{{ $message }}</strong>
-									@enderror
+                                    @error('color_id')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
 								</div>
-			
+
 								<div class="prt_04 mb-4">
 									<p class="d-flex align-items-center mb-0 text-dark ft-medium">Size:</p>
 									<div class="text-left pb-0 pt-2" id="size_id">
@@ -99,17 +99,16 @@
 										@foreach (App\Models\inventory::where('product_id', $products->first()->id)->get() as $size)
 											<div class="form-check size-option form-option form-check-inline mb-2" >
 												<input type="hidden" value="1" name="size_id">
-			
+
 												<input class="form-check-input" type="radio" name="size_id" id="{{ $size->id }}" value="{{ $size->rel_to_size->id }}">
 												<label class="form-option-label" for="{{ $size->id }}">{{ $size->rel_to_size->name }}</label>
 											</div>
 										@endforeach
 										@endif
-			
 									</div>
-									@error('size_id')
-										<strong class="text-danger">{{ $message }}</strong>
-									@enderror
+                                    @error('size_id')
+                                        <strong class="text-danger">{{ $message }}</strong>
+                                    @enderror
 								</div>
 								<div class="prt_05 mb-4">
 									<div class="form-row mb-7">
@@ -125,9 +124,9 @@
 										</div>
 										<div class="col-12 col-lg">
 											<!-- Submit -->
-											<input type="hidden" name="product_id" value="{{ $products->first()->id }}"> 
+											<input type="hidden" name="product_id" value="{{ $products->first()->id }}">
 											<button type="submit" class="btn btn-block custom-height mb-2">
-												<i class="lni lni-shopping-basket mr-2"></i>Add to Cart 
+												<i class="lni lni-shopping-basket mr-2"></i>Add to Cart
 											</button>
 										</div>
 									</form>
@@ -143,22 +142,11 @@
 									</form>
 								</div>
 								</div>
-								
+
 								<div class="prt_06">
-									<p class="mb-0 d-flex align-items-center">
-									<span class="mr-4">Share:</span>
-									{{-- <a class="d-inline-flex align-items-center justify-content-center p-3 gray circle fs-sm text-muted mr-2" href="https://twitter.com/intent/tweet?text={{ urlencode($products->first()->title) }}&amp;url={{ urlencode(route('singel.product',$products->first()->slug)) }}" target="_blank"> --}}
-										{{-- <i class="fab fa-twitter position-absolute"></i> --}}
-									</a>
-									<a class="d-inline-flex align-items-center justify-content-center p-3 gray circle fs-sm text-muted mr-2" href="#!">
-										<i class="fab fa-facebook-f position-absolute"></i>
-									</a>
-									<a class="d-inline-flex align-items-center justify-content-center p-3 gray circle fs-sm text-muted" href="#!">
-										<i class="fab fa-pinterest-p position-absolute"></i>
-									</a>
-									</p>
+									
 								</div>
-								
+
 							</div>
 						</div>
 
@@ -166,7 +154,7 @@
 				</div>
 			</section>
 			<!-- ======================= Product Detail End ======================== -->
-			
+
 			<!-- ======================= Product Description ======================= -->
 			<section class="middle">
 				<div class="container">
@@ -176,29 +164,29 @@
 								<li class="nav-item" role="presentation">
 									<a class="nav-link active" id="description-tab" href="#description" data-toggle="tab" role="tab" aria-controls="description" aria-selected="true">Description</a>
 								</li>
-								
+
 							</ul>
-							
+
 							<div class="tab-content" id="myTabContent">
-								
+
 								<!-- Description Content -->
 								<div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
 									<div class="description_info">
 										<p class="p-0 mb-2">{!! $products->first()->long_desp !!}</p>
 									</div>
 								</div>
-								
+
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
 			<!-- ======================= Product Description End ==================== -->
-			
+
 			<!-- ======================= Similar Products Start ============================ -->
 			<section class="middle pt-0">
 				<div class="container">
-					
+
 					<div class="row justify-content-center">
 						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="sec_title position-relative text-center">
@@ -207,17 +195,17 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<div class="row">
 						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
 							<div class="slide_items">
-								
+
 								<!-- single Item -->
 								@foreach ($similer_product as $product)
 								<div class="single_itesm">
 									<div class="product_grid card b-0 mb-0">
 										<div class="badge bg-success text-white position-absolute ft-regular ab-left text-upper">Sale</div>
-										<button class="snackbar-wishlist btn btn_love position-absolute ab-right"><i class="far fa-heart"></i></button> 
+										<button class="snackbar-wishlist btn btn_love position-absolute ab-right"><i class="far fa-heart"></i></button>
 										<div class="card-body p-0">
 											<div class="shop_thumb position-relative">
 												<a class="card-img-top d-block overflow-hidden" href="{{ route('singel.product', $product->slug) }}"><img class="card-img-top" src="{{ asset('uplode/product') }}/{{ $product->thumbnail }}" alt="..."></a>
@@ -237,15 +225,15 @@
 									</div>
 								</div>
 								@endforeach
-								
+
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 			</section>
 			<!-- ======================= Similar Products Start ============================ -->
-			
+
 @endsection
 
 @section('footer_script')

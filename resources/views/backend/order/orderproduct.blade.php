@@ -4,25 +4,58 @@
     <!-- main content start -->
     <div class="main-content">
         <div class="dashboard-breadcrumb mb-30">
-            <h2>Orders</h2>
+            <h2>Customer Details</h2>
+            <a href="{{ route('invoice.download', $order_product->first()->id) }}" class="btn btn-success p-2">invoice Download</a>
+            <a href="" @click.prevent="printme" class="btn btn-success p-2">invoice Print</a>
         </div>
+        <table class="table table-hover digi-dataTable mb-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Payment Method</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="table-dscr">{{ $billingdetails->first()->name }}</span></td>
+                    <td><span class="table-dscr">{{ $billingdetails->first()->mobile }}</span></td>
+                    <td><span class="table-dscr">{{ $billingdetails->first()->email }}</span></td>
+                    <td><span class="table-dscr">{{ $billingdetails->first()->address }}</span></td>
+                    @if ($orders->first()->payment_method == 1)
+                        <td><span class="btn-box">cash on delivery</span></td>
+                     @else
+                        <td><span class="btn-box"></span></td>
+                    @endif
+                    @if ($billingdetails->first()->notes != null)
+                        <td><span class="btn-box">{{ $billingdetails->first()->notes }}</span></td>
+                     @else
+                        <td><span class="btn-box"></span></td>
+                    @endif
+                </tr>
+            </tbody>
+        </table>
         <div class="row g-4">
             <div class="col-xxl-12 col-md-9 col-12">
                 <div class="panel">
-                    <div class="panel-header">
-                        <h5>All Order</h5>
-                        <div class="btn-box d-flex gap-2">
-                            <div id="tableSearch"></div>
-                            
-                        </div>
-                    </div>
+
                     <div class="panel-body">
                         <div class="table-filter-option">
                             <div class="row justify-content-between g-3">
-                                <div class="col-xxl-4 col-6 col-xs-12">
-                                    
+
+                                <div class="col-xxl-11 col-11 col-xs-11">
+                                    <div class="panel-header">
+                                        <h5>All Product</h5>
+                                        <div class="btn-box d-flex gap-2">
+                                            <div id="tableSearch"></div>
+
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-xl-2 col-3 col-xs-12 d-flex justify-content-end">
+                                <div class="col-xl-1 col-1 col-xs-11 d-flex justify-content-end mt-3">
                                     <div id="productTableLength"></div>
                                 </div>
                             </div>
@@ -32,7 +65,7 @@
                                 <tr>
                                     <th>Order Id</th>
                                     <th>Product</th>
-                                    <th>Customer</th>
+                                    {{-- <th>Customer</th> --}}
                                     <th>Price</th>
                                     <th>color</th>
                                     <th>Size</th>
@@ -56,16 +89,16 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><span class="table-dscr">{{ $order->rel_to_customer->name }}</span></td>
+                                    {{-- <td><span class="table-dscr">{{ $order->rel_to_customer->name }}</span></td> --}}
                                     <td><span class="table-dscr">{{ $order->price }}</span></td>
                                     <td><span class="table-dscr">{{ $order->rel_to_color->name }}</span></td>
                                     <td><span class="table-dscr">{{ $order->rel_to_size->name }}</span></td>
                                     <td><span class="btn-box">{{ $order->quantity }}</span></td>
-                                    
+
                                     {{-- <td>
                                         <div class="btn-box">
                                             <a href="{{ route('orderproduct.destroy', $order->id) }}"> <i class="fa-light fa-trash"></i></a>
-                                            
+
                                         </div>
                                     </td> --}}
                                 </tr>
@@ -83,4 +116,12 @@
         <!-- footer end -->
     </div>
     <!-- main content end -->
+@endsection
+
+@section('footer_script')
+<script>
+    printme(){
+    window.print();
+}
+</script>
 @endsection

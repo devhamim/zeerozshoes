@@ -35,61 +35,70 @@
 
             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
                 <div class="card-wrap-body mb-4">
-                    <h4 class="ft-medium mb-3 theme-cl">Make a Call</h4>
-                    <p>1354 Green Street Nashville Drive Dodge City,<br> KS 67801 United States</p>
-                    <p class="lh-1"><span class="text-dark ft-medium">Email:</span> dhananjaypreet@gmail.com</p>
+                    <h4 class="ft-medium mb-3 theme-cl">Address</h4>
+                    <p>{{ $settings->first()->address }}</p>
+                    {{-- <p class="lh-1"><span class="text-dark ft-medium">Email:</span> dhananjaypreet@gmail.com</p> --}}
                 </div>
 
                 <div class="card-wrap-body mb-3">
                     <h4 class="ft-medium mb-3 theme-cl">Make a Call</h4>
                     <h6 class="ft-medium mb-1">Customer Care:</h6>
-                    <p class="mb-2">+91 458 753 6924</p>
-                    <h6 class="ft-medium mb-1">Careers::</h6>
-                    <p>+91 965 784 23658</p>
+                    <strong class="mb-2">Phone: {{ $settings->first()->phone }}</strong>
                 </div>
 
                 <div class="card-wrap-body mb-3">
                     <h4 class="ft-medium mb-3 theme-cl">Drop A Mail</h4>
                     <p>Fill out our form and we will contact you within 24 hours.</p>
-                    <p class="lh-1 text-dark">dhananjaypreet@gmail.com</p>
-                    <p class="lh-1 text-dark">dhananjaypreet@gmail.com</p>
+                    <strong class="lh-1 text-dark">Email: {{ $settings->first()->email }}</strong>
                 </div>
             </div>
 
             <div class="col-xl-7 col-lg-8 col-md-12 col-sm-12">
-                <form class="row">
-
+                <form class="row" action="{{ route('customer.message') }}" method="POST">
+                    @csrf
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                         <div class="form-group">
                             <label class="">Your Name *</label>
-                            <input type="text" class="form-control">
+                            <input type="text" name="name" class="form-control">
+                            @error('name')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                         <div class="form-group">
                             <label class=" text-dark ft-medium">Your Email *</label>
-                            <input type="text" class="form-control">
+                            <input type="email" name="email" class="form-control">
+                            @error('email')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                         <div class="form-group">
                             <label class="">Subject</label>
-                            <input type="text" class="form-control">
+                            <input type="text" name="subject" class="form-control">
+                            @error('subject')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                         <div class="form-group">
                             <label class=" text-dark ft-medium">Message</label>
-                            <textarea class="form-control ht-80"></textarea>
+                            <textarea class="form-control ht-80" name="message"></textarea>
+                            @error('message')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                         </div>
                     </div>
 
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-dark">Send Message</button>
+                            <button type="submit" class="btn btn-dark">Send Message</button>
                         </div>
                     </div>
 

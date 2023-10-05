@@ -48,6 +48,7 @@ class brandController extends Controller
             'brand_img'=>$file_name,
             'created_at'=>Carbon::now(),
         ]);
+        toast('Brand add successfully', 'success');
         return back();
     }
 
@@ -95,6 +96,7 @@ class brandController extends Controller
                 'brand_img'=>$file_name,
             ]);
         }
+        toast('Update successfully', 'success');
         return redirect()->route('brand.index');
 
     }
@@ -111,6 +113,7 @@ class brandController extends Controller
 
         //Deleting Item
         brand::find($id)->delete();
+        toast('Delete successfully', 'error');
         return back();
     }
 }

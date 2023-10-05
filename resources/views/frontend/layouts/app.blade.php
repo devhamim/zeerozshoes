@@ -7,12 +7,14 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Footcap</title>
+  <meta name="description" content="{{ $products->first()->meta_desp }}">
+  <meta name="title" content="{{ $products->first()->meta_title }}">
+  <title>{{ $settings->first()->title }}</title>
 
   <!--
     - favicon
   -->
-  <link rel="shortcut icon" href="{{ asset('uplode/logo') }}/{{ $settings->first()->logo }}" type="image/svg+xml">
+  <link rel="shortcut icon" href="{{ asset('uplode/logo/fav') }}/{{ $settings->first()->favicon }}" type="image/svg+xml">
 
     {{-- km --}}
     <link href="{{ asset('frontend') }}/assets/css/styles.css" rel="stylesheet">
@@ -50,6 +52,15 @@
     }
     input[type=password] {
       font-size: 16px;
+    }
+    input[type=number] {
+      font-size: 16px;
+    }
+    textarea {
+    font-size: 16px !important;
+    }
+    select {
+      font-size: 16px !important;
     }
 
   </style>

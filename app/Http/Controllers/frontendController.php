@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\about;
+use App\Models\adbanner;
+use App\Models\banner;
 use App\Models\brand;
 use App\Models\card;
 use App\Models\category;
 use App\Models\color;
+use App\Models\customer_message;
 use App\Models\customerlogin;
 use App\Models\gallery;
 use App\Models\inventory;
 use App\Models\order;
 use App\Models\product;
+use App\Models\setting;
 use App\Models\size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,11 +27,17 @@ class frontendController extends Controller
     //index
     function index()
     {
-        $products = product::where('status', 1)->get();
+        $products = product::where('status', 1)->orderBy('created_at', 'desc')->get();
         $brands = brand::all();
+        $adbanner = adbanner::where('status', 1)->get();
+        $categorys = category::all();
+        $banners = banner::where('status', 1)->get();
         return view('frontend.home', [
             'products' => $products,
             'brands' => $brands,
+            'adbanner' => $adbanner,
+            'categorys' => $categorys,
+            'banners' => $banners,
         ]);
     }
 
@@ -74,7 +85,10 @@ class frontendController extends Controller
     //about
     function about()
     {
-        return view('frontend.about');
+        $abouts = about::where('status', 1)->get();
+        return view('frontend.about', [
+            'abouts'=>$abouts,
+        ]);
     }
     //category
     function category()
@@ -87,7 +101,10 @@ class frontendController extends Controller
     //contact
     function contact()
     {
-        return view('frontend.contact');
+        $settings = setting::all();
+        return view('frontend.contact', [
+            'settings'=>$settings,
+        ]);
     }
     //customer_profile
     function customer_profile()
@@ -103,9 +120,8 @@ class frontendController extends Controller
         ]);
     }
 
-
     // customer profile update
-    function profile_store(Request $request)
+    function customer_store(Request $request)
     {
         if ($request->password == '') {
             if ($request->photo == '') {
@@ -184,6 +200,8 @@ class frontendController extends Controller
                 return back();
             }
         }
+        toast('Profile Update successfully', 'success');
+        return back();
     }
 
 
@@ -196,5 +214,20 @@ class frontendController extends Controller
     function reg_login()
     {
         return view('frontend.regLogin');
+    }
+
+    // customer_message
+    function customer_message(Request $request){
+        $request->validate([
+            '*'=>'required',
+        ]);
+        customer_message::insert([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'subject'=>$request->subject,
+            'message'=>$request->message,
+        ]);
+        toast('Message sent successfully','success');
+        return back();
     }
 }

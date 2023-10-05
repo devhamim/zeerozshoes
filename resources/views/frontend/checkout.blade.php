@@ -128,6 +128,9 @@
                                 <input id="c2" class="radio-custom delivery" name="charge" type="radio" value="120">
                                 <label for="c2" class="radio-custom-label">Outside City</label>
                             </li>
+                            @error('charge')
+                                <strong class="text-danger">{{ $message }}</strong>
+                            @enderror
                         </ul>
                     </div>
                 </div>

@@ -23,7 +23,7 @@
 <section class="middle">
     <div class="container">
         <div class="row align-items-start justify-content-between">
-        
+
             <div class="col-12 col-md-12 col-lg-4 col-xl-4 text-center miliods">
                 <div class="d-block border rounded mfliud-bot">
                     <div class="dashboard_author px-2 py-5">
@@ -39,7 +39,7 @@
                             <span class="">{{ Auth::guard('customerlogin')->user()->address }}</span>
                         </div>
                     </div>
-                    
+
                     <div class="dashboard_author">
                         <h4 class="px-3 py-2 mb-0 lh-2 gray fs-sm ft-medium text-muted text-uppercase text-left">Dashboard Navigation</h4>
                         <ul class="dahs_navbar">
@@ -49,14 +49,14 @@
                             <li><a href="{{ route('customer.logout') }}"><i class="lni lni-power-switch mr-2"></i>Log Out</a></li>
                         </ul>
                     </div>
-                    
+
                 </div>
             </div>
-            
+
             <div class="col-12 col-md-12 col-lg-8 col-xl-8">
                 <!-- row -->
                 <div class="row align-items-center">
-                    <form class="row m-0" action="{{ route('profile.store') }}" method="POST" enctype="multipart/form-data">
+                    <form class="row m-0" action="{{ route('customer.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
@@ -64,8 +64,8 @@
                                 <input type="text" name="name" class="form-control" value="{{ Auth::guard('customerlogin')->user()->name }}" />
                             </div>
                         </div>
-                    
-                        
+
+
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label class=" text-dark ft-medium">Email ID *</label>
@@ -96,42 +96,42 @@
                                 <input type="file" name="photo" class="form-control" value="{{ Auth::guard('customerlogin')->user()->photo }}" />
                             </div>
                         </div>
-                        
+
                         {{-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label class=" text-dark ft-medium">About Us *</label>
                                 <textarea class="form-control ht-80"></textarea>
                             </div>
                         </div> --}}
-                        
+
                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label class=" text-dark ft-medium">Current Password *</label>
                                 <input type="password" name="old_password" class="form-control" />
                             </div>
                         </div>
-                        
+
                         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                             <div class="form-group">
                                 <label class=" text-dark ft-medium">New Password *</label>
                                 <input type="password" name="password" class="form-control" />
                             </div>
                         </div>
-                        
+
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-dark">Save Changes</button>
                             </div>
                         </div>
-                        
+
                     </form>
                 </div>
                 <!-- row -->
             </div>
-            
+
         </div>
     </div>
 </section>
 <!-- ======================= Dashboard Detail End ======================== -->
-  
+
 @endsection

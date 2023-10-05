@@ -27,6 +27,17 @@ class productController extends Controller
         ]);
     }
 
+// product_status
+    public function product_status(Request $request)
+    {
+
+        $products = product::where('status', $request->status)->get();
+
+        return view('backend.product.index_status', [
+            'products'=>$products,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -48,7 +59,14 @@ class productController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            '*'=>'required',
+            'title'=>'required',
+            'sort_desp'=>'required',
+            'long_desp'=>'required',
+            'brand_id'=>'required',
+            'category_id'=>'required',
+            'subcategory_id'=>'required',
+            'thumbnail'=>'required',
+            'price'=>'required',
         ]);
 
         // product insert
@@ -164,7 +182,7 @@ class productController extends Controller
 
             // Multiple image delete
             $gallerys = gallery::where('product_id', $product_id)->get();
-            
+
           foreach($gallerys as $gallery){
               $image = gallery::where('id',$gallery->id)->first()->gallery;
                 $image_delete = public_path('uplode/product/gallery/'.$image);
@@ -186,6 +204,7 @@ class productController extends Controller
             ]);
         }
         }
+        toast('Update Successfully', 'success');
         return redirect()->route('product.index');
     }
 
@@ -196,12 +215,12 @@ class productController extends Controller
     {
            // Multiple image delete
            $gallerys = gallery::where('product_id', $id)->get();
-            
+
            foreach($gallerys as $gallery){
                $image = gallery::where('id',$gallery->id)->first()->gallery;
                  $image_delete = public_path('uplode/product/gallery/'.$image);
                  unlink($image_delete);
- 
+
                  gallery::find($gallery->id)->delete();
            }
 
@@ -212,6 +231,7 @@ class productController extends Controller
 
         //Deleting Item
         product::find($id)->delete();
+        toast('Delete Successfully', 'error');
         return back();
     }
 }

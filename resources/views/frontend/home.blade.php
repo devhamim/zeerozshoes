@@ -7,29 +7,16 @@
       <!--
         - #HERO
       -->
-
-      <section class="section hero" style="background-image: url('{{ asset('frontend') }}/assets/images/hero-banner.png')">
+    <header  class="hero_main">
+    <a href="{{ $banners->first()->link }}">
+      <section class="section hero" style="background-image: url('{{ asset('uplode/banner') }}/{{ $banners->first()->image }}">
         <div class="container">
 
-          <h2 class="h1 hero-title">
-            New Summer <strong>Shoes Collection</strong>
-          </h2>
-
-          <p class="hero-text">
-            Competently expedite alternative benefits whereas leading-edge catalysts for change. Globally leverage
-            existing an
-            expanded array of leadership.
-          </p>
-
-          <button class="btn btn-primary d-flex">
-            <span>Shop Now</span>
-
-            <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
-          </button>
-
+          
         </div>
       </section>
-
+    </a>
+  </header>
 
       <!--
         - #COLLECTION
@@ -40,41 +27,28 @@
 
           <ul class="collection-list has-scrollbar">
 
+            @foreach ($categorys as $category)
             <li>
-              <div class="collection-card" style="background-image: url('{{ asset('frontend') }}/assets/images/collection-1.jpg')">
-                <h3 class="h4 card-title">Men Collections</h3>
+                <input id="category{{ $category->id }}" class="category_id" name="category_id" type="radio" value="{{ $category->id }}"
+                @if(isset($_GET['category_id']))
+                    @if($_GET['category_id'] == $category->id)
+                    checked
+                    @endif
+                @endif
+                >
+                <div class="collection-card" style="background-image: url('{{ asset('uplode/category') }}/{{ $category->category_img }}')">
+                    <h3 class="h4 card-title text-white">{{ $category->name }}</h3>
 
-                <a href="#" class="btn btn-secondary d-flex">
-                  <span>Explore All</span>
+                    <label for="category{{ $category->id }}">
+                <a  class="btn btn-primary d-flex text-white">
+                  <span class="text-white">Explore All</span>
 
                   <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
                 </a>
-              </div>
-            </li>
-
-            <li>
-              <div class="collection-card" style="background-image: url('{{ asset('frontend') }}/assets/images/collection-2.jpg')">
-                <h3 class="h4 card-title">Women Collections</h3>
-
-                <a href="#" class="btn btn-secondary d-flex">
-                  <span>Explore All</span>
-
-                  <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
-                </a>
-              </div>
-            </li>
-
-            <li>
-              <div class="collection-card" style="background-image: url('{{ asset('frontend') }}/assets/images/collection-3.jpg')">
-                <h3 class="h4 card-title">Sports Collections</h3>
-
-                <a href="#" class="btn btn-secondary d-flex">
-                  <span>Explore All</span>
-
-                  <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
-                </a>
-              </div>
-            </li>
+            </label>
+            </div>
+        </li>
+            @endforeach
 
           </ul>
 
@@ -95,7 +69,7 @@
                 <button class="filter-btn  active" type="button" data-filter=".{{ $brand->name }}">{{ $brand->name }}</button>
             @endforeach
           </div>
-          
+
           <div class="product-list best_product">
             @foreach ($products->take(8) as $product)
             <div class="product-item mix {{ $product->rel_to_brand->name }}">
@@ -148,7 +122,7 @@
                 <div class="card-content">
 
                   <div class="card-cat">
-                    <a href="#" class="card-cat-link">{{ $product->rel_to_cat->name }}</a>
+                    <a href="#" class="card-cat-link">{{ $product->rel_to_cat->name }}</a> /
                     <a href="#" class="card-cat-link">{{ $product->rel_to_subcat->name }}</a>
                   </div>
 
@@ -177,34 +151,18 @@
 
           <ul class="cta-list">
 
+            @foreach ($adbanner->take(2) as $ad)
             <li>
-              <div class="cta-card" style="background-image: url('{{ asset('frontend') }}/assets/images/cta-1.jpg')">
-                <p class="card-subtitle">Adidas Shoes</p>
+            <a href="{{ $ad->link }}">
+              <div class="cta-card" style="background-image: url('{{ asset('uplode/adbanner') }}/{{ $ad->image }}')">
+                <p class="card-subtitle py-3"></p>
 
-                <h3 class="h2 card-title">The Summer Sale Off 50%</h3>
-
-                <a href="#" class="btn btn-link">
-                  <span>Shop Now</span>
-
-                  <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+                <h3 class="h2 card-title py-5"></h3>
                 </a>
               </div>
+            </a>
             </li>
-
-            <li>
-              <div class="cta-card" style="background-image: url('{{ asset('frontend') }}/assets/images/cta-2.jpg')">
-                <p class="card-subtitle">Nike Shoes</p>
-
-                <h3 class="h2 card-title">Makes Yourself Keep Sporty</h3>
-
-                <a href="#" class="btn btn-link">
-                  <span>Shop Now</span>
-
-                  <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
-                </a>
-              </div>
-            </li>
-
+            @endforeach
           </ul>
 
         </div>
@@ -216,7 +174,7 @@
 
       <section class="section special">
         <div class="container">
-
+          @foreach ($products->take(1) as $product)
           <div class="special-banner" style="background-image: url('{{ asset('uplode/product') }}/{{ $product->thumbnail }}')">
             <h2 class="h3 banner-title">Recent Product</h2>
 
@@ -226,11 +184,15 @@
               <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
             </a>
           </div>
-          @foreach ($products->skip(1)->take(3) as $product)
-          <div class="">
-
+          @endforeach
+          <div class="special-product">
+            <h2 class="h2 section-title">
+              <span class="text">Recent Product</span>
+              
+              <span class="line"></span>
+            </h2>
             <ul class="has-scrollbar">
-
+              @foreach ($products->skip(1)->take(10) as $product)
               <li class="product-item">
                 <div class="product-card" tabindex="0">
 
@@ -248,7 +210,7 @@
                           <button class="card-action-btn" aria-labelledby="card-label-2">
                             <ion-icon name="heart-outline"></ion-icon>
                           </button>
-  
+
                           <div class="card-action-tooltip" id="card-label-2">Add to Whishlist</div>
                         </form>
                       </li>
@@ -276,17 +238,16 @@
                       <a href="{{ route('singel.product',$product->slug) }}">{{ $product->name }}</a>
                     </h3>
 
-                    <data class="card-price">{{ $product->total_price }}</data>
+                    <data class="card-price">{{ $product->total_price }}Tk</data>
 
                   </div>
 
                 </div>
               </li>
 
+              @endforeach
             </ul>
-
           </div>
-          @endforeach
         </div>
       </section>
 
@@ -314,7 +275,7 @@
                   <h3 class="h4 card-title">Free Shiping</h3>
 
                   <p class="card-text">
-                    All orders over <span>$150</span>
+                    All orders over <span>2000Tk</span>
                   </p>
                 </div>
 
@@ -381,9 +342,6 @@
       </section>
 
 
-
-
-
       <!--
         - #INSTA POST
       -->
@@ -397,7 +355,6 @@
               class="insta-post-banner image-contain">
 
             <a  class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
             </a>
           </li>
 
@@ -406,7 +363,7 @@
               class="insta-post-banner image-contain">
 
             <a  class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
+
             </a>
           </li>
 
@@ -415,7 +372,6 @@
               class="insta-post-banner image-contain">
 
             <a  class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
             </a>
           </li>
 
@@ -424,7 +380,6 @@
               class="insta-post-banner image-contain">
 
             <a  class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
             </a>
           </li>
 
@@ -451,7 +406,6 @@
               class="insta-post-banner image-contain">
 
             <a class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
             </a>
           </li>
 
@@ -460,7 +414,7 @@
               class="insta-post-banner image-contain">
 
             <a class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
+
             </a>
           </li>
 

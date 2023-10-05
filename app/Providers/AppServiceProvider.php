@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\card;
+use App\Models\product;
 use App\Models\setting;
 use App\Models\wish;
 use Illuminate\Support\ServiceProvider;
@@ -59,12 +60,24 @@ class AppServiceProvider extends ServiceProvider
         View::composer('frontend.layouts.app', function ($view){
             $view->with('settings', setting::all());
         });
+        // meta
+        View::composer('frontend.layouts.app', function ($view){
+            $view->with('products', product::all());
+        });
         // logo
         View::composer('frontend.layouts.footer', function ($view){
             $view->with('settings', setting::all());
         });
         // logo
         View::composer('backend.layouts.footer', function ($view){
+            $view->with('settings', setting::all());
+        });
+        // logo
+        View::composer('backend.app', function ($view){
+            $view->with('settings', setting::all());
+        });
+        // logo
+        View::composer('auth.login', function ($view){
             $view->with('settings', setting::all());
         });
 

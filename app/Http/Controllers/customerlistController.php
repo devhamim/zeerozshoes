@@ -64,7 +64,7 @@ class customerlistController extends Controller
     public function destroy(string $id)
     {
         customerlogin::find($id)->delete();
-        alert('Title','Customer list Successfully', 'error');
+        toast('Customer list Successfully', 'error');
         return back();
     }
 }

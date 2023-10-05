@@ -52,6 +52,7 @@ class settingController extends Controller
             'email'=>$request->email,
             'phone'=>$request->phone,
             'address'=>$request->address,
+            'title'=>$request->title,
             'footer'=>$request->footer,
             'logo'=>$logo_name,
             'favicon'=>$fav_name,
@@ -61,7 +62,7 @@ class settingController extends Controller
             'instagram'=>$request->instagram,
         ]);
 
-        toast('Title','website update Successfully', 'success');
+        toast('website update Successfully', 'success');
         return back();
     }
 
@@ -91,17 +92,17 @@ class settingController extends Controller
             'email'=>'required',
             'phone'=>'required',
             'address'=>'required',
+            'title'=>'required',
             'footer'=>'required',
-            'logo'=>'required',
-            'favicon'=>'required',
         ]);
-        
+
 
         setting::find($id)->update([
             'name'=>$request->name,
             'email'=>$request->email,
             'phone'=>$request->phone,
             'address'=>$request->address,
+            'title'=>$request->title,
             'footer'=>$request->footer,
             'facebook'=>$request->facebook,
             'twitter'=>$request->twitter,
@@ -131,8 +132,7 @@ class settingController extends Controller
             ]);
         }
 
-
-        toast('Title','website Successfully', 'success');
+        toast('Update Successfully', 'success');
         return back();
     }
 

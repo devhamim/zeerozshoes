@@ -24,22 +24,34 @@
                         <a href="{{ route('category.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-tag"></i></span> <span class="sidebar-txt">Category</span></a>
                     </li>
                     <li class="sidebar-dropdown-item">
-                        <a href="{{ route('subcategory.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-tag"></i></span> <span class="sidebar-txt">Sub Category</span></a>
+                        <a href="{{ route('subcategory.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-solid fa-tags"></i></span> <span class="sidebar-txt">Sub Category</span></a>
                     </li>
                     <li class="sidebar-dropdown-item">
-                        <a href="{{ route('brand.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-tag"></i></span> <span class="sidebar-txt">Brand</span></a>
+                        <a href="{{ route('brand.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-brands fa-codepen"></i></span> <span class="sidebar-txt">Brand</span></a>
                     </li>
                     <li class="sidebar-dropdown-item">
-                        <a href="{{ route('color_size.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-tag"></i></span> <span class="sidebar-txt">Color & Size</span></a>
+                        <a href="{{ route('color_size.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-solid fa-palette"></i></span> <span class="sidebar-txt">Color & Size</span></a>
                     </li>
                     <li class="sidebar-dropdown-item">
                         <a href="{{ route('order.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-cart-shopping-fast"></i></span> <span class="sidebar-txt">Order</span></a>
                     </li>
                     <li class="sidebar-dropdown-item">
-                        <a href="dashboard-invoices.html" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-file-invoice"></i></span> <span class="sidebar-txt">Invoices</span></a>
+                        <a href="{{ route('customermessage.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-file-invoice"></i></span> <span class="sidebar-txt">Customer message</span></a>
                     </li>
                     <li class="sidebar-dropdown-item">
-                        <a href="dashboard-contact.html" class="sidebar-link"><span class="nav-icon"><i class="fa-light fa-user-plus"></i></span> <span class="sidebar-txt">Contacts</span></a>
+                        <a href="{{ route('abouts.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-regular fa-clipboard"></i></span> <span class="sidebar-txt">About</span></a>
+                    </li>
+                    <li class="sidebar-dropdown-item">
+                        <a href="{{ route('banner.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-solid fa-panorama"></i></span> <span class="sidebar-txt">Banner</span></a>
+                    </li>
+                    <li class="sidebar-dropdown-item">
+                        <a href="{{ route('adbanner.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-regular fa-image"></i></span> <span class="sidebar-txt">Ad Banner</span></a>
+                    </li>
+                    <li class="sidebar-dropdown-item">
+                        <a href="{{ route('user.list') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-solid fa-gear"></i></span> <span class="sidebar-txt">User list</span></a>
+                    </li>
+                    <li class="sidebar-dropdown-item">
+                        <a href="{{ route('setting.index') }}" class="sidebar-link"><span class="nav-icon"><i class="fa-solid fa-gear"></i></span> <span class="sidebar-txt">Setting</span></a>
                     </li>
                 </ul>
             </li>
@@ -100,7 +112,7 @@
                     </li>
                 </ul>
             </li> --}}
-            
+
         </ul>
     </div>
 </div>

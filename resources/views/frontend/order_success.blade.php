@@ -31,9 +31,9 @@
                 <!-- Heading -->
                 <h2 class="mb-2 ft-bold">Your Order is Completed!</h2>
                 <!-- Text -->
-                <p class="ft-regular fs-md mb-5">Your order <span class="text-body text-dark">{{ session('order_id') }}</span> has been completed. Your order details are shown for your personal accont.</p>
+                <p class="ft-regular fs-md mb-5">Your order <strong class="text-body text-dark">{{ session('order_id') }}</strong> has been completed. Your order details are shown for your personal accont.</p>
                 <!-- Button -->
-                <a class="btn btn-dark" href="{{ url('/') }}">Shop Again</a>
+                <a class="btn btn-dark" href="{{ route('shop') }}">Shop Again</a>
             </div>
         </div>
 

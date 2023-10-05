@@ -55,7 +55,7 @@ class inventoryController extends Controller
             'size_id'=>$request->size_id,
             'quantity'=>$request->quantity,
         ]);
-        alert('Title','Inventory Add Successfully', 'success');
+        toast('Inventory Add Successfully','success');
         return back();
     }
 
@@ -89,6 +89,7 @@ class inventoryController extends Controller
     public function destroy(string $id)
     {
         inventory::find($id)->delete();
+        toast('Delete Successfully', 'error');
         return back();
     }
 }
