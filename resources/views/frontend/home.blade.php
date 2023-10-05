@@ -388,16 +388,13 @@
               class="insta-post-banner image-contain">
 
             <a  class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
             </a>
           </li>
 
           <li class="insta-post-item">
             <img src="{{ asset('frontend') }}/assets/images/insta-6.jpg" width="100" height="100" loading="lazy" alt="Instagram post"
               class="insta-post-banner image-contain">
-
             <a  class="insta-post-link">
-              <ion-icon name="logo-instagram"></ion-icon>
             </a>
           </li>
 

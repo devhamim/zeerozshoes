@@ -78,14 +78,14 @@
           <ul class="footer-list">
 
             <li>
-              <p class="footer-list-title">My Account</p>
+              <p class="footer-list-title">Pages</p>
             </li>
 
             <li>
-              <a href="{{ route('customer.profile') }}" class="footer-link">
+              <a href="{{ route('category-list') }}" class="footer-link">
                 <ion-icon name="chevron-forward-outline"></ion-icon>
 
-                <span class="footer-link-text">My Account</span>
+                <span class="footer-link-text">Category</span>
               </a>
             </li>
 
