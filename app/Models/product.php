@@ -5,27 +5,42 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class product extends Model
+class Product extends Model
 {
     use HasFactory;
-
     protected $guarded = ['id'];
 
-    //rel to category
-    function rel_to_cat(){
-        return $this->belongsTo(category::class, 'category_id');
+    function rel_to_category() {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    function rel_to_brand() {
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
 
-    // rel to subcategory
-    function rel_to_subcat(){
-        return $this->belongsTo(subCategory::class, 'subcategory_id');
+    function rel_to_user() {
+        return $this->belongsTo(User::class, 'added_by');
     }
-    // rel to brand
-    function rel_to_brand(){
-        return $this->belongsTo(brand::class, 'brand_id');
+    
+    function rel_to_size() {
+        return $this->hasMany(Inventory::class, 'product_id', 'id');
     }
-    // rel_to_inventore
-    function rel_to_inventore(){
-        return $this->hasMany(inventory::class, 'product_id');
+
+    function rel_to_inventories() {
+        return $this->hasMany(Inventory::class, 'product_id');
+    }
+
+    // function rel_to_product() {
+    //     return $this->belongsTo(Product::class, 'product_id');
+    // }
+    // function products() {
+    //     $this->hasMany(Product::class, 'category_id', 'id');
+    // }
+    // public function products() {
+    //     return $this->hasMany('App\Models\Inventory', 'size_id', 'id')->where('status', 1);
+    // }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
     }
 }

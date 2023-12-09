@@ -2,236 +2,192 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\brand;
-use App\Models\category;
-use App\Models\gallery;
-use App\Models\product;
-use App\Models\subCategory;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Color;
+use App\Models\Inventory;
+use App\Models\Product;
+use App\Models\ProductGallery;
+use App\Models\Size;
 use Carbon\Carbon;
+use Carbon\Cli\Invoker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Str;
 use Image;
-use RealRashid\SweetAlert\Facades\Alert;
 
-class productController extends Controller
+class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create a new controller instance.
+     *
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
-        $products = product::all();
-
-        return view('backend.product.index', [
-            'products'=>$products,
+        $this->middleware('auth');
+    }
+    
+    //product_add
+    function product_add() {
+        $categories = Category::all();
+        return view('backend.product.product', [
+            'categories' => $categories,
         ]);
     }
 
-// product_status
-    public function product_status(Request $request)
-    {
-
-        $products = product::where('status', $request->status)->get();
-
-        return view('backend.product.index_status', [
-            'products'=>$products,
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $categorys = category::all();
-        $subcategorys = subCategory::all();
-        $brands = brand::all();
-        return view('backend.product.create', [
-            'categorys'=>$categorys,
-            'subcategorys'=>$subcategorys,
-            'brands'=>$brands,
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    // product_store
+    function product_store(Request $request) {
         $request->validate([
-            'title'=>'required',
-            'sort_desp'=>'required',
-            'long_desp'=>'required',
-            'brand_id'=>'required',
-            'category_id'=>'required',
-            'subcategory_id'=>'required',
-            'thumbnail'=>'required',
-            'price'=>'required',
+            'product_name'=> 'required',
+            'description'=> 'required',
+            'product_price'=> 'required',
+            'sku'=> 'required',
+            'preview_image' => 'required',
+            'quantity' => 'required',
+            'gallery_image' => 'required',
+            
+        ]);
+        $after_emplode_cat = implode(',', $request->category_id);
+            $product_id = Product::insertGetId([
+                'product_name' => $request->product_name,
+                'category_id' => $after_emplode_cat,
+                'product_price' => $request->product_price,
+                'product_discount' => $request->product_discount,
+                'quantity' => $request->quantity,
+                'sku' => $request->sku,
+                'status' => $request->status,
+                'description' => $request->description,
+                'slug' => Str::random(8).'-'.rand(10000,99999),
+                'created_at' => Carbon::now(),
+            ]);
+        
+        // Preview image
+
+        $uploaded_file_one = $request->preview_image;
+        $extension = $uploaded_file_one->getClientOriginalExtension();
+        $file_name_one = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000, 9999).'.'.$extension;
+        Image::make($uploaded_file_one)->resize(218, 220)->save(public_path('uploads/products/preview/'.$file_name_one));
+        Product::find($product_id)->update([
+            'preview_image' => $file_name_one,
+            'updated_at' => Carbon::now(),
         ]);
 
-        // product insert
-        // image insert
-        $product_img = $request->thumbnail;
-        $extension = $product_img->getClientOriginalExtension();
-        $file_name = Str::random(5). rand(1000,999999).'.'.$extension;
-        Image::make($product_img)->resize(720, 720)->save(public_path('uplode/product/'.$file_name));
+        // Gallery images
+        $uploaded_thumbnails = $request->gallery_image;
+        foreach ($uploaded_thumbnails as $thumbnail) {
+            $thumb_extension = $thumbnail->getClientOriginalExtension();
+            $thumb_name = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000,9999).'.'.$thumb_extension;
+            Image::make($thumbnail)->resize(458, 458)->save(public_path('uploads/products/gallery/'.$thumb_name));
 
-        $product_id = product::insertGetId([
-            'title'=>$request->title,
-            'sort_desp'=>$request->sort_desp,
-            'long_desp'=>$request->long_desp,
-            'brand_id'=>$request->brand_id,
-            'category_id'=>$request->category_id,
-            'subcategory_id'=>$request->subcategory_id,
-            'thumbnail'=>$file_name,
-            'price'=>$request->price,
-            'discount'=>$request->discount,
-            'total_price'=>$request->price - $request->discount,
-            'slug'=>Str::lower(str_replace(' ', '-', $request->title)). '-'. rand(0, 100000000),
-            'meta_title'=>$request->meta_title,
-            'meta_desp'=>$request->meta_desp,
-            'created_at'=>Carbon::now(),
-        ]);
-
-
-        // gallery insert
-        foreach($request->gallery as $gallerys){
-            $extension = $gallerys->getClientOriginalExtension();
-            $file_name = Str::random(5). rand(1000,999999). '.' .$extension;
-            Image::make($gallerys)->resize(720, 720)->save(public_path('uplode/product/gallery/'.$file_name));
-
-            gallery::insert([
-                'product_id'=>$product_id,
-                'gallery'=>$file_name,
-                'created_at'=>Carbon::now(),
+            ProductGallery::insert([
+                'product_id' => $product_id,
+                'gallery_image' => $thumb_name,
+                'created_at' => Carbon::now(),
             ]);
         }
-        alert('Title','Product Add Successfully, Please Add Inventory', 'success');
-        return redirect()->route('product.inventory', $product_id);
+        
+        return back()->withSuccess('Product added successfully.');
     }
 
-      // catagory subcatagory select
-      function getsubcategory(Request $request){
-        $subcategorys = subCategory::where('category', $request->category_id)->get();
-        $str = '<option value="">-- Select Option --</option>';
-        foreach($subcategorys as $subcategory){
-            $str .= '<option value="'. $subcategory->id .'">' .$subcategory->name .'</option>';
-        }
-        echo $str;
-    }
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $brands = brand::all();
-        $categorys = category::all();
-        $subcategorys = subCategory::all();
-        $products = product::find($id);
-        return view('backend.product.edit', [
-            'products'=>$products,
-            'brands'=>$brands,
-            'categorys'=>$categorys,
-            'subcategorys'=>$subcategorys,
+    // Product list
+    function product_list() {
+        $products = Product::orderBy('created_at', 'desc')->get();
+        return view('backend.product.product_list', [
+            'products' => $products,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        product::find($id)->update([
-            'title'=>$request->title,
-            'sort_desp'=>$request->sort_desp,
-            'long_desp'=>$request->long_desp,
-            'status'=>$request->status,
-            'brand_id'=>$request->brand_id,
-            'category_id'=>$request->category_id,
-            'subcategory_id'=>$request->subcategory_id,
-            'price'=>$request->price,
-            'discount'=>$request->discount,
-            'total_price'=>$request->price - $request->discount,
-            'slug'=>Str::lower(str_replace(' ', '-', $request->title)). '-'. rand(0, 100000000),
-            'meta_title'=>$request->meta_title,
-            'meta_desp'=>$request->meta_desp,
+    // product_delete
+    function product_delete($product_id) {
+        $preview_image_one = Product::where('id', $product_id)->get();
+        // $delete_preview_one = public_path('uploads/products/preview/'. $preview_image_one->first()->preview_image);
+        // unlink($delete_preview_one);
+        Product::find($product_id)->delete();
+        $thumb_image = ProductGallery::where('product_id', $product_id)->get();
+        // foreach($thumb_image as $thumb) {
+        //     $delete_thumbnails = public_path('uploads/products/gallery/'. $thumb->gallery_image);
+        //     unlink($delete_thumbnails);
+        //     ProductGallery::find($thumb->id)->delete();
+        // }
+        return back()->withSuccess('Product item deleted successfully');
+    }
+
+    // product_edit
+    function product_edit($product_id) {
+        $product = Product::find($product_id);
+        $categories = Category::all();
+        $gallery = ProductGallery::where('product_id', $product_id)->get();
+        return view('backend.product.product_edit', compact(['product', 'categories', 'gallery']));
+    }
+
+    // product_update
+    function product_update(Request $request) {
+        $request->validate([
+            'product_name'=> 'required',
+            'category_id'=> 'required',
+            'description'=> 'required',
+            'product_price'=> 'required',
+            'sku*' => 'required',
+            'quantity' => 'required',
+        ], [
+            'category_id.required' => 'The category field is required',
         ]);
 
-
-         // image insert
-         if($request->thumbnail != ''){
-            $image = product::where('id',$request->id)->first()->thumbnail;
-            $image_delete = public_path('uplode/product/'.$image);
-            unlink($image_delete);
-
-            $product_img = $request->thumbnail;
-            $extension = $product_img->getClientOriginalExtension();
-            $file_name = Str::random(5). rand(1000,999999).'.'.$extension;
-            Image::make($product_img)->resize(720, 720)->save(public_path('uplode/product/'.$file_name));
-            product::find($id)->update([
-                'thumbnail'=>$file_name,
+        // Preview image
+        if($request->preview_image != null) {
+            $image1 = Product::where('id', $request->product_id)->first()->preview_image;
+            $delete_from1 = public_path('uploads/products/preview/'.$image1);
+            unlink($delete_from1);
+            $uploaded_file_one = $request->preview_image;
+            $extension = $uploaded_file_one->getClientOriginalExtension();
+            $file_name_one = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000, 9999).'.'.$extension;
+            Image::make($uploaded_file_one)->resize(218, 220)->save(public_path('uploads/products/preview/'.$file_name_one));
+            Product::find($request->product_id)->update([
+                'preview_image' => $file_name_one,
+                'updated_at' => Carbon::now(),
             ]);
-         }
+
+        }
 
 
-         // gallery insert
-        if($request->gallery != ''){
-            $product_id = $request->id;
-
-            // Multiple image delete
-            $gallerys = gallery::where('product_id', $product_id)->get();
-
-          foreach($gallerys as $gallery){
-              $image = gallery::where('id',$gallery->id)->first()->gallery;
-                $image_delete = public_path('uplode/product/gallery/'.$image);
-                unlink($image_delete);
-
-                gallery::find($gallery->id)->delete();
-          }
-
-
-          foreach($request->gallery as $gallerys){
-            $extension = $gallerys->getClientOriginalExtension();
-            $file_name = Str::random(5). rand(1000,999999). '.' .$extension;
-            Image::make($gallerys)->resize(720, 720)->save(public_path('uplode/product/gallery/'.$file_name));
-
-            gallery::insert([
-                'product_id'=>$product_id,
-                'gallery'=>$file_name,
-                'created_at'=>Carbon::now(),
+        // Gallery image
+        if($request->gallery_image != null) {
+            $thumb_image = ProductGallery::where('product_id', $request->product_id)->get();
+            // foreach($thumb_image as $thumb) {
+            //     $delete_from_thumb = public_path('uploads/products/gallery/'.$thumb->gallery_image);
+            //     unlink($delete_from_thumb);
+            // }
+            ProductGallery::where('product_id', $request->product_id)->delete();
+            $uploaded_thumbnails = $request->gallery_image;
+            foreach ($uploaded_thumbnails as $thumbnail) {
+                $thumb_extension = $thumbnail->getClientOriginalExtension();
+                $thumb_name = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000,9999).'.'.$thumb_extension;
+                Image::make($thumbnail)->resize(458, 458)->save(public_path('uploads/products/gallery/'.$thumb_name));
+                ProductGallery::insert([
+                    'product_id' => $request->product_id,
+                    'gallery_image' => $thumb_name,
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+        }
+            $after_emplode_cat = implode(',', $request->category_id);
+            Product::find($request->product_id)->update([
+                'product_name' => $request->product_name,
+                'category_id' => $after_emplode_cat,
+                'product_price' => $request->product_price,
+                'product_discount' => $request->product_discount,
+                'quantity' => $request->quantity,
+                'sku' => $request->sku,
+                'status' => $request->status,
+                'description' => $request->description,
+                'slug' => Str::random(8).'-'.rand(10000,99999),
+                'updated_at' => Carbon::now(),
             ]);
-        }
-        }
-        toast('Update Successfully', 'success');
-        return redirect()->route('product.index');
+        
+        
+        return redirect()->route('product.list')->withSuccess('Product updated successfully');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-           // Multiple image delete
-           $gallerys = gallery::where('product_id', $id)->get();
-
-           foreach($gallerys as $gallery){
-               $image = gallery::where('id',$gallery->id)->first()->gallery;
-                 $image_delete = public_path('uplode/product/gallery/'.$image);
-                 unlink($image_delete);
-
-                 gallery::find($gallery->id)->delete();
-           }
-
-        //Deleting Photo
-        $image = product::where('id',$id)->first()->thumbnail;
-        $image_delete = public_path('uplode/product/'.$image);
-        unlink($image_delete);
-
-        //Deleting Item
-        product::find($id)->delete();
-        toast('Delete Successfully', 'error');
-        return back();
-    }
+    
 }

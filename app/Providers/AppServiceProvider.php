@@ -2,14 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\card;
-use App\Models\product;
+use App\Models\Category;
 use App\Models\setting;
-use App\Models\wish;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Auth;
 use View;
+use Cookie;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,62 +23,45 @@ class AppServiceProvider extends ServiceProvider
      * Bootstrap any application services.
      */
     public function boot(): void
-    {
-        // card
-        View::composer('frontend.layouts.footer', function ($view){
-            $view->with('cards', card::where('customer_id', Auth::guard('customerlogin')->id())->get());
-        });
+{
+    // footer category
+    View::composer('frontend.master.master', function ($view){
+        $view->with('categorys', Category::all());
 
-        // card count
-        View::composer('frontend.layouts.header', function ($view){
-            $view->with('card_count', card::where('customer_id', Auth::guard('customerlogin')->id())->count());
-        });
+        if (Cookie::has('shopping_cart')) {
+            $cookie_data = stripslashes(Cookie::get('shopping_cart'));
+            $cart_data = json_decode($cookie_data, true);
+        } else {
+            $cart_data = [];
+        }
 
+        // Pass $cart_data to the view
+        $view->with('totalItemsInCart', count($cart_data));
+    });
 
-        // wish
-        View::composer('frontend.layouts.footer', function ($view){
-            $view->with('wishs', wish::where('customer_id', Auth::guard('customerlogin')->id())->get());
-        });
-
-        // wish count
-        View::composer('frontend.layouts.header', function ($view){
-            $view->with('wish_count', wish::where('customer_id', Auth::guard('customerlogin')->id())->count());
-        });
-
-        // logo
-        View::composer('frontend.layouts.header', function ($view){
-            $view->with('settings', setting::all());
-        });
-
-        // logo
-        View::composer('backend.layouts.header', function ($view){
-            $view->with('settings', setting::all());
-        });
-        // logo
-        View::composer('frontend.layouts.app', function ($view){
-            $view->with('settings', setting::all());
-        });
-        // meta
-        View::composer('frontend.layouts.app', function ($view){
-            $view->with('products', product::all());
-        });
-        // logo
-        View::composer('frontend.layouts.footer', function ($view){
-            $view->with('settings', setting::all());
-        });
-        // logo
-        View::composer('backend.layouts.footer', function ($view){
-            $view->with('settings', setting::all());
-        });
-        // logo
-        View::composer('backend.app', function ($view){
-            $view->with('settings', setting::all());
-        });
-        // logo
-        View::composer('auth.login', function ($view){
-            $view->with('settings', setting::all());
-        });
-
-        Paginator::useBootstrap();
-    }
+     // setting
+     View::composer('frontend.master.master', function ($view){
+        $view->with('setting', setting::all());
+    });
+     // setting
+     View::composer('layouts.dashboard', function ($view){
+        $view->with('setting', setting::all());
+    });
+    // setting
+     View::composer('auth.login', function ($view){
+        $view->with('setting', setting::all());
+    });
+    // setting
+     View::composer('invoice.invoice', function ($view){
+        $view->with('setting', setting::all());
+    });
+    // setting
+     View::composer('backend.orders.view_invoice_print', function ($view){
+        $view->with('setting', setting::all());
+    });
+    // setting
+     View::composer('backend.orders.multi_view_invoice_print', function ($view){
+        $view->with('setting', setting::all());
+    });
+}
 }

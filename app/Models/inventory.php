@@ -5,25 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class inventory extends Model
+class Inventory extends Model
 {
     use HasFactory;
 
-
     protected $guarded = ['id'];
 
-    //rel to product
-    function rel_to_pro(){
-        return $this->belongsTo(product::class, 'product_id');
+    function rel_to_size() {
+        return $this->belongsTo(Size::class, 'size_id');
     }
 
-    //rel to category
-    function rel_to_color(){
-        return $this->belongsTo(color::class, 'color_id');
+    function rel_to_color() {
+        return $this->belongsTo(Color::class, 'color_id');
     }
-    
-    //rel to category
-    function rel_to_size(){
-        return $this->belongsTo(size::class, 'size_id');
+
+    public function products() {
+        return $this->hasMany('App\Models\Size', 'size_id', 'id');
     }
 }

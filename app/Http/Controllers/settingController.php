@@ -2,145 +2,77 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\setting;
 use Illuminate\Http\Request;
+use App\Models\setting;
 use Str;
-use Image;
 
 class settingController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
+    /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function setting_add()
     {
-        $settings = setting::all();
-        return view('backend.setting.index', [
+        $settings = setting::first();
+        return view('backend.setting.profile', [
             'settings'=>$settings,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function setting_update(Request $request)
     {
-        //
-    }
+        $rules = [
+            'name'=>'required|max:255',
+            'email'=>'',
+            'about'=>'',
+            'phone'=>'',
+            'logo'=>'',
+            'favicon'=>'',
+            'address'=>'',
+            'footer'=>'',
+            'title'=>'',
+            'meta_title'=>'',
+            'meta_tag'=>'',
+            'meta_description'=>'',
+        ];
+        
+         /**
+         * Handle upload an image
+         */
+       
+        $validatesData = $request->validate($rules);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            '*'=>'required',
-        ]);
-        // logo
-        $logo_img = $request->logo;
-        $extension = $logo_img->getClientOriginalExtension();
-        $logo_name = Str::random(5). rand(1000,999999).'.'.$extension;
-        Image::make($logo_img)->save(public_path('uplode/logo/'.$logo_name));
 
-        // fav
-        $fav_img = $request->favicon;
-        $extension = $fav_img->getClientOriginalExtension();
-        $fav_name = Str::random(5). rand(1000,999999).'.'.$extension;
-        Image::make($fav_img)->save(public_path('uplode/logo/fav/'.$fav_name));
-        setting::insert([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'phone'=>$request->phone,
-            'address'=>$request->address,
-            'title'=>$request->title,
-            'footer'=>$request->footer,
-            'logo'=>$logo_name,
-            'favicon'=>$fav_name,
-            'facebook'=>$request->facebook,
-            'twitter'=>$request->twitter,
-            'linkedin'=>$request->linkedin,
-            'instagram'=>$request->instagram,
-        ]);
+        if ($request->hasFile('logo')) {
+            $image = $request->file('logo');
+            $extension = $image->getClientOriginalExtension();
+            $file_name = Str::random(5) . rand(1000, 999999) . '.' . $extension;
+            $image->move(public_path('uploads/setting'), $file_name);
+            $validatesData['logo'] = $file_name;
+        }
+        if ($request->hasFile('favicon')) {
+            $image = $request->file('favicon');
+            $extension = $image->getClientOriginalExtension();
+            $file_name = Str::random(5) . rand(1000, 999999) . '.' . $extension;
+            $image->move(public_path('uploads/setting'), $file_name);
+            $validatesData['favicon'] = $file_name;
+        }
 
-        toast('website update Successfully', 'success');
+
+        // setting::created($validatesData);
+        setting::where('id', $request->id)->update($validatesData);
+
         return back();
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required',
-            'phone'=>'required',
-            'address'=>'required',
-            'title'=>'required',
-            'footer'=>'required',
-        ]);
-
-
-        setting::find($id)->update([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'phone'=>$request->phone,
-            'address'=>$request->address,
-            'title'=>$request->title,
-            'footer'=>$request->footer,
-            'facebook'=>$request->facebook,
-            'twitter'=>$request->twitter,
-            'linkedin'=>$request->linkedin,
-            'instagram'=>$request->instagram,
-        ]);
-        if($request->logo != ''){
-            // logo
-            $logo_img = $request->logo;
-            $extension = $logo_img->getClientOriginalExtension();
-            $logo_name = Str::random(5). rand(1000,999999).'.'.$extension;
-            Image::make($logo_img)->save(public_path('uplode/logo/'.$logo_name));
-
-            setting::find($id)->update([
-                'logo'=>$logo_name,
-            ]);
-        }
-        if($request->favicon){
-            // fav
-            $fav_img = $request->favicon;
-            $extension = $fav_img->getClientOriginalExtension();
-            $fav_name = Str::random(5). rand(1000,999999).'.'.$extension;
-            Image::make($fav_img)->save(public_path('uplode/logo/fav/'.$fav_name));
-
-            setting::find($id)->update([
-                'favicon'=>$fav_name,
-            ]);
-        }
-
-        toast('Update Successfully', 'success');
-        return back();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

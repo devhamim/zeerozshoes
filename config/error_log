@@ -1,0 +1,8 @@
+[04-Jul-2023 20:18:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nugorxyz/public_html/config/cache.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/nugorxyz/public_html/config/cache.php on line 18
+[22-Jul-2023 04:51:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/nugorxyz/public_html/config/cache.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/nugorxyz/public_html/config/cache.php on line 18

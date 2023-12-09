@@ -39,10 +39,9 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ],
-        'customerlogin' => [
+        ],'customerauth' => [
             'driver' => 'session',
-            'provider' => 'customerlogins',
+            'provider' => 'customerauths',
         ],
     ],
 
@@ -67,10 +66,9 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
-        ],
-        'customerlogins' => [
+        ],'customerauths' => [
             'driver' => 'eloquent',
-            'model' => App\Models\customerlogin::class,
+            'model' => App\Models\CustomerAuth::class,
         ],
 
         // 'users' => [

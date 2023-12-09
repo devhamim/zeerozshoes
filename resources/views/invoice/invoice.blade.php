@@ -3,12 +3,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Example 2</title>
+    <title>PDF Download</title>
     <style>
-        @font-face {
-  font-family: SourceSansPro;
-  src: url(SourceSansPro-Regular.ttf);
-}
 
 .clearfix:after {
   content: "";
@@ -28,9 +24,7 @@ body {
   margin: 0 auto; 
   color: #555555;
   background: #FFFFFF; 
-  font-family: Arial, sans-serif; 
   font-size: 14px; 
-  font-family: SourceSansPro;
 }
 
 header {
@@ -209,7 +203,7 @@ footer {
   <body>
     <header class="clearfix">
       <div id="logo">
-        <img src="https://i.postimg.cc/V6m2VzGV/wjmc-O837245.png">
+        <img width="200px" src="https://farazzimart.com/uploads/setting/aYRb146498.png">
       </div>
       <div id="company">
         <h2 class="name">{{ $setting->first()->name }}</h2>
@@ -223,9 +217,9 @@ footer {
       <div id="details" class="clearfix">
         <div id="client">
           <div class="to">INVOICE TO:</div>
-          <h2 class="name">{{ $billingdetails->first()->name }}</h2>
-          <div class="address">{{ $billingdetails->first()->address }}</div>
-          <div class="email"><a >{{ $billingdetails->first()->email }}</a></div>
+          <h2 class="name">{{ $billingdetails->first()->customer_name }}</h2>
+          <div class="address">{{ $billingdetails->first()->customer_phone }}</div>
+          <div class="email"><a >{{ $billingdetails->first()->customer_address }}</a></div>
         </div>
         <div id="invoice">
           <h1>#{{ $data->order_id }}</h1>
@@ -236,7 +230,7 @@ footer {
         <thead>
           <tr>
             <th class="no">#</th>
-            <th class="desc">DESCRIPTION</th>
+            <th class="desc">NAME</th>
             <th class="unit">UNIT PRICE</th>
             <th class="qty">QUANTITY</th>
             <th class="total">TOTAL</th>
@@ -249,13 +243,13 @@ footer {
           @foreach ($order_product as $sl=>$order)
           <tr>
             <td class="no">{{ $sl+1 }}</td>
-            <td class="desc"><h3>{{ $order->rel_to_pro->title }}</h3>{{ $order->rel_to_pro->sort_desp }} <h5 style="padding-top: 10px">Color:{{ $order->rel_to_color->name }} <span>, Size:{{ $order->rel_to_size->name }}</span></h5> </td>
-            <td class="unit">{{ number_format($order->price) }}</td>
+            <td class=""><h3 >{{ $order->rel_to_product->product_name }}</h3></td>
+            <td class="unit">{{ number_format($order->rel_to_product->product_price) }}</td>
             <td class="qty">{{ $order->quantity }}</td>
-            <td class="total">{{ number_format($order->price*$order->quantity) }}</td>
+            <td class="total">{{ number_format($order->rel_to_product->product_price*$order->quantity) }}</td>
           </tr>
           @php
-            $subtotal += $order->price*$order->quantity;
+            $subtotal += $order->rel_to_product->product_price*$order->quantity;
           @endphp
           @endforeach
         </tbody>
@@ -267,13 +261,21 @@ footer {
           </tr>
           <tr>
             <td colspan="2"></td>
+            @php
+            if($order_id->first()->courier_id != null){
+              $order_charge = $order_id->first()->rel_to_courier->charge;
+            }
+            else {
+              $order_charge = 0;
+            }
+            @endphp
             <td colspan="2">Charge</td>
-            <td>{{ $data->charge }}</td>
+            <td>{{ $order_charge }}</td>
           </tr>
           <tr>
             <td colspan="2"></td>
             <td colspan="2">GRAND TOTAL</td>
-            <td>{{ number_format($data->total) }}</td>
+            <td>{{ number_format($subtotal+$order_charge) }}</td>
           </tr>
         </tfoot>
       </table>

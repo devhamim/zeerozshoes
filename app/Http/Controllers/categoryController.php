@@ -2,122 +2,108 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\category;
+use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Str;
 use Image;
 
-class categoryController extends Controller
+class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create a new controller instance.
+     *
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
-        $categorys = category::all();
-        return view('backend.category.index', [
-            'categorys'=>$categorys,
-        ]);
+        $this->middleware('auth');
+    }
+    
+    //category_add
+    function category_add() {
+        return view('backend.category.category_add');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    // category_store
+    function category_store(Request $request) {
         $request->validate([
-            '*'=>'required',
+            'category_name' => 'required|unique:categories',
+            'category_image' => 'required|mimes:jpg,jpeg,gif,png,webp|file|max:5000',
         ]);
 
-        $category_img = $request->category_img;
-        $extension = $category_img->getClientOriginalExtension();
-        $file_name = Str::random(5). rand(1000,999999).'.'.$extension;
-        Image::make($category_img)->resize(720, 720)->save(public_path('uplode/category/'.$file_name));
-
-        category::insert([
-            'name'=>$request->name,
-            'description'=>$request->description,
-            'category_img'=>$file_name,
-            'created_at'=>Carbon::now(),
+        $category_id = Category::insertGetId([
+            'category_name' => $request->category_name,
+            'added_by' => Auth::id(),
+            'status' => $request->status,
+            'created_at' => Carbon::now(),
         ]);
-        toast('Add successfully', 'success');
-        return back();
 
+        $category_image = $request->category_image;
+        $extension = $category_image->getClientOriginalExtension();
+        $after_replace = str_replace(' ', '-', $request->category_name);
+        $file_name = Str::lower($after_replace).'-'.rand(1000, 9999).'.'.$extension;
+        Image::make($category_image)->save(public_path('uploads/category/'.$file_name));
+        
+        Category::find($category_id)->update([
+            'category_image' => $file_name,
+        ]);
+        return back()->withSuccess('Category added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $categorys = category::find($id);
-        return view('backend.category.edit', [
-            'categorys'=>$categorys,
+    // category list
+    function category_list() {
+        $categories = Category::orderBy('created_at', 'desc')->get();
+        return view('backend.category.category_list', [
+            'categories' => $categories
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        if($request->category_img == ''){
-            category::find($id)->update([
-                'name'=>$request->name,
-                'description'=>$request->description,
+    // category edit
+    function category_edit($category_id) {
+        $categories = Category::find($category_id);
+        return view('backend.category.category_edit', [
+            'category' => $categories,
+        ]);
+    }
+
+    // category update
+    function category_update(Request $request) {
+        $request->validate([
+            'category_name' => 'required',
+            'category_image' => 'mimes:jpg,jpeg,gif,png,webp|file|max:5000',
+        ]);
+        if($request->category_image == null) {
+            Category::find($request->category_id)->update([
+                'category_name' => $request->category_name,
+                'status' => $request->status,
+                'added_by' => Auth::id(),
+                'updated_at' => Carbon::now(),
             ]);
-        }
-        else{
-            $image = category::where('id',$request->id)->first()->category_img;
-            $image_delete = public_path('uplode/category/'.$image);
-            unlink($image_delete);
-
-            $category_img = $request->category_img;
-            $extension = $category_img->getClientOriginalExtension();
-            $file_name = Str::random(5). rand(1000,999999).'.'.$extension;
-            Image::make($category_img)->resize(720, 720)->save(public_path('uplode/category/'.$file_name));
-
-
-            category::find($id)->update([
-                'name'=>$request->name,
-                'description'=>$request->description,
-                'category_img'=>$file_name,
+            return redirect()->route('category.list')->withSuccess('Category updated successfully');
+        } else {
+            $category_img_del = Category::where('id', $request->category_id)->first()->category_image;
+            $delete_from = public_path('uploads/category/'.$category_img_del);
+            unlink($delete_from);
+            $upload_img = $request->category_image;
+            $extension = $upload_img->getClientOriginalExtension();
+            $after_replace = str_replace(' ', '-', $request->category_name);
+            $file_name = $after_replace.'-'.rand(1000, 9999).'.'.$extension;
+            Image::make($upload_img)->save(public_path('uploads/category/'.$file_name));
+            Category::find($request->category_id)->update([
+                'category_name' => $request->category_name,
+                'category_image' => $file_name,
+                'status' => $request->status,
+                'added_by' => Auth::id(),
+                'updated_at' => Carbon::now(),
             ]);
+            return redirect()->route('category.list')->withSuccess('Category updated successfully');
         }
-        toast('update successfully', 'success');
-        return redirect()->route('category.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //Deleting Photo
-        $image = category::where('id',$id)->first()->category_img;
-        $image_delete = public_path('uplode/category/'.$image);
-        unlink($image_delete);
-
-        //Deleting Item
-        category::find($id)->delete();
-        toast('Delete successfully', 'error');
-        return back();
+    function category_delete($category_id){
+        Category::find($category_id)->delete();
+        return back()->withError('Category Delete successfully');
     }
 }

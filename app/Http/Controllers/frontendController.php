@@ -2,232 +2,138 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\about;
-use App\Models\adbanner;
 use App\Models\banner;
-use App\Models\brand;
-use App\Models\card;
-use App\Models\category;
-use App\Models\color;
-use App\Models\customer_message;
-use App\Models\customerlogin;
-use App\Models\gallery;
-use App\Models\inventory;
-use App\Models\order;
-use App\Models\product;
-use App\Models\setting;
-use App\Models\size;
+use App\Models\Category;
+use App\Models\Color;
+use App\Models\Inventory;
+use App\Models\Order;
+use App\Models\privacy_policy;
+use App\Models\Product;
+use App\Models\ProductGallery;
+use App\Models\terms_condition;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Image;
+use Cookie;
 
-class frontendController extends Controller
+class FrontendController extends Controller
 {
-    //index
-    function index()
-    {
-        $products = product::where('status', 1)->orderBy('created_at', 'desc')->get();
-        $brands = brand::all();
-        $adbanner = adbanner::where('status', 1)->get();
-        $categorys = category::all();
-        $banners = banner::where('status', 1)->get();
-        return view('frontend.home', [
+    //home
+    function home() {
+
+       
+        $categories = Category::all();
+        $category= Category::take(6)->get();
+        $products = Product::where('status', '1')->get();
+        // $top_selling_products = Order::groupBy('product_id')
+        // ->selectRaw('sum(total) as sum, product_id')
+        // ->havingRaw('sum >= 1')
+        // ->take(3)
+        // ->orderBy('sum', 'DESC')
+        // ->get();
+        $latest_products = Product::where('status', '1')->latest()->get();
+        $discount_products = Product::where('status', '1')->where('product_discount', '!=', null)->get();
+        // $discount_products_count = Product::where('status', '1')->where('product_discount', '!=', null)->where('validity', '>', Carbon::now())->get();
+        $banners = banner::all();
+
+ 
+        return view('frontend.home.index', [
+            'categories' => $categories,
+            'categoryy' => $category,
             'products' => $products,
-            'brands' => $brands,
-            'adbanner' => $adbanner,
-            'categorys' => $categorys,
+            'latest_products' => $latest_products,
+            // 'top_selling_products' => $top_selling_products,
+            'discount_products' => $discount_products,
             'banners' => $banners,
+
+            // 'discount_products_count' => $discount_products_count,
         ]);
     }
 
-
-    //singel_product
-    function singel_product($slug)
-    {
-        $products = product::where('slug', $slug)->get();
-        $similer_product = product::where('category_id',  $products->first()->category_id)->where('id', '!=',  $products->first()->id)->get();
-        $available_color = inventory::where('product_id', $products->first()->id)
-            ->groupBy('color_id')
-            ->selectRaw('count(*) as total, color_id')->get();
-        $sizes = size::all();
-        $colors = color::all();
-        $brands = brand::all();
-        $gallerys = gallery::where('product_id', $products->first()->id)->get();
-        return view('frontend.single_product', [
+    // category
+    function category_one($category_id) {
+        $categories = Category::all();
+        $products = Product::where('status', '1')->where('category_id', $category_id)->get();
+        $category_id_num = $category_id;
+        return view('frontend.category.category_one', [
+            'categories' => $categories,
             'products' => $products,
-            'brands' => $brands,
-            'gallerys' => $gallerys,
-            'similer_product' => $similer_product,
-            'available_color' => $available_color,
-            'sizes' => $sizes,
-            'colors' => $colors,
+            'category_id_num' => $category_id_num,
         ]);
     }
 
-    // prodct size ajax url
-    function getsize(Request $request)
-    {
-        $sizes = inventory::where('product_id', $request->product_id)->where('color_id', $request->color_id)->get();
-        $str = '';
-
-        foreach ($sizes as $size) {
-            $str .= '<div class="form-check size-option form-option form-check-inline mb-2">
-                        <input class="form-check-input" type="radio" name="size_id" id="' . $size->rel_to_size->id . '" value="' . $size->rel_to_size->id . '">
-                        <label class="form-option-label" for="' . $size->rel_to_size->id . '">' . $size->rel_to_size->name . '</label>
-                    </div>';
-        }
-
-        echo $str;
+    // category_two
+    function category_two() {
+        $categories = Category::all();
+        $products = Product::where('status', '1')->get();
+        return view('frontend.category.category_two', compact(['categories', 'products']));
     }
 
+    
 
-    //about
-    function about()
-    {
-        $abouts = about::where('status', 1)->get();
-        return view('frontend.about', [
-            'abouts'=>$abouts,
-        ]);
-    }
-    //category
-    function category()
-    {
-        $categorys = category::paginate(12);
-        return view('frontend.category', [
-            'categorys' => $categorys,
-        ]);
-    }
-    //contact
-    function contact()
-    {
-        $settings = setting::all();
-        return view('frontend.contact', [
-            'settings'=>$settings,
-        ]);
-    }
-    //customer_profile
-    function customer_profile()
-    {
-        return view('frontend.profile');
-    }
-    //customer_order
-    function customer_order()
-    {
-        $order_product = order::where('customer_id', Auth::guard('customerlogin')->id())->get();
-        return view('frontend.customer_order', [
-            'order_product' => $order_product,
+    // offer
+    function offer() {
+        $categories = Category::all();
+        $products = Product::where('status', '1')->where('product_discount', '!=', null)->where('validity', '>', Carbon::now())->get();
+        return view('frontend.offer.offer', [
+            'categories' => $categories,
+            'products' => $products,
         ]);
     }
 
-    // customer profile update
-    function customer_store(Request $request)
-    {
-        if ($request->password == '') {
-            if ($request->photo == '') {
-                customerlogin::find(Auth::guard('customerlogin')->id())->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'country' => $request->country,
-                    'address' => $request->address,
-                ]);
-                toast('Profile Update successfully', 'success');
-                return back();
-            } else {
-                $customer_photo = $request->photo;
-                $extention = $customer_photo->getClientOriginalExtension();
-                $file_name = Auth::guard('customerlogin')->id() . '.' . $extention;
-                Image::make($customer_photo)->resize(720, 720)->save(public_path('uplode/customerprofile/' . $file_name));
-
-                customerlogin::find(Auth::guard('customerlogin')->id())->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'country' => $request->country,
-                    'address' => $request->address,
-                    'photo' => $file_name,
-                ]);
-                toast('Profile Update successfully', 'success');
-                return back();
-            }
-        } else {
-            $request->validate([
-                'old_password' => 'required',
-                'password' => 'required',
-            ]);
-
-            if (Hash::check($request->old_password, Auth::guard('customerlogin')->user()->password)) {
-                customerlogin::find(Auth::guard('customerlogin')->id())->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => bcrypt($request->password),
-                    'country' => $request->country,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                ]);
-            } else {
-                toast('Old Password Wrong', 'success');
-                return back();
-            }
-            if ($request->photo == '') {
-                customerlogin::find(Auth::guard('customerlogin')->id())->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => bcrypt($request->password),
-                    'country' => $request->country,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                ]);
-                toast('Profile Update successfully', 'success');
-                return back();
-            } else {
-                $customer_photo = $request->photo;
-                $extention = $customer_photo->getClientOriginalExtension();
-                $file_name = Auth::guard('customerlogin')->id() . '.' . $extention;
-                Image::make($customer_photo)->resize(720, 720)->save(public_path('uplode/customerprofile/' . $file_name));
-
-                customerlogin::find(Auth::guard('customerlogin')->id())->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => bcrypt($request->password),
-                    'country' => $request->country,
-                    'phone' => $request->phone,
-                    'address' => $request->address,
-                    'photo' => $file_name,
-                ]);
-                toast('Profile Update successfully', 'success');
-                return back();
-            }
-        }
-        toast('Profile Update successfully', 'success');
-        return back();
-    }
-
-
-    //wishlist
-    function wishlist()
-    {
-        return view('frontend.wishlist');
-    }
-    //login_reg
-    function reg_login()
-    {
-        return view('frontend.regLogin');
-    }
-
-    // customer_message
-    function customer_message(Request $request){
-        $request->validate([
-            '*'=>'required',
+    function campaign() {
+        $categories = Category::all();
+        $products = Product::where('status', '1')->where('campaign', '1')->where('validity', '>', Carbon::now())->get();
+        return view('frontend.campaign.campaign', [
+            'categories' => $categories,
+            'products' => $products,
         ]);
-        customer_message::insert([
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'subject'=>$request->subject,
-            'message'=>$request->message,
+    }
+
+    function product_quick_view($product_id) {
+        $product = Product::find($product_id);
+        $product_gallery = ProductGallery::where('product_id', $product->id)->get();
+        $available_colors = Inventory::where('product_id', $product->id)
+        ->groupBy('color_id')
+        ->selectRaw('count(*) as total, color_id')
+        ->get();
+
+        $available_sizes = Inventory::where('product_id', $product->id)
+        ->groupBy('size_id')
+        ->selectRaw('count(*) as total, size_id')
+        ->get();
+        return view('frontend.home.product_quick_view.product_quick_view', [
+            'product'=> $product,
+            'colors'=> $available_colors,
+            'sizes' => $available_sizes,
+            'product_gallery' => $product_gallery,
         ]);
-        toast('Message sent successfully','success');
-        return back();
+    }
+
+    // about
+    function about(){
+        $categories = Category::all();
+        return view('frontend.about.about', [
+            'categories'=>$categories,
+        ]);
+    }
+
+    // privacy_policy
+    function privacy_policy(){
+        $categories = Category::all();
+        $privacy_policy = privacy_policy::all();
+        return view('frontend.privacy_policy.privacy_policy', [
+            'categories'=>$categories,
+            'privacy_policy'=>$privacy_policy,
+        ]);
+    }
+
+    // terms
+    function terms(){
+        $categories = Category::all();
+        $terms = terms_condition::all();
+        return view('frontend.terms.terms_and_condition', [
+            'categories'=>$categories,
+            'terms'=>$terms,
+        ]);
     }
 }

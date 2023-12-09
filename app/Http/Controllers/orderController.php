@@ -2,97 +2,91 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\billingdetailss;
-use App\Models\order;
-use App\Models\orderproduct;
+use App\Models\Billingdetails;
+use App\Models\CustomerAuth;
+use App\Models\Order;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
+use str;
 
 class orderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Create a new controller instance.
+     *
+     * @return void
      */
-    public function index()
+    public function __construct()
     {
-        $orders = order::all();
-        // $order_product = orderproduct::where('order_id', $orders->first()->order_id)->get();
-        return view('backend.order.index', [
+        $this->middleware('auth');
+    }
+    
+    //order_list
+    function order_list(){
+        $orders = OrderProduct::orderBy("id", "desc")->get();
+        $order_list = Order::orderBy("id", "desc")->get() ;
+        $customers  = CustomerAuth::all();
+        return view('backend.order.order_list', [
             'orders'=>$orders,
-            // 'order_product'=>$order_product,
+            'customers'=>$customers,
+            'order_list'=>$order_list,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    //order delivered
+    function order_delivere(Request $request){
+
+        if($request->order_delivere == 1){
+            $order_list = OrderProduct::where('status','!=', 4)->orderBy("id", "desc")->get() ;
+            return view('backend.order.order_nondelivered', [
+                'order_list'=>$order_list,
+            ]);
+        }
+        else{
+            $order_list = OrderProduct::where('status', 4)->orderBy("id", "desc")->get() ;
+            return view('backend.order.order_delivered', [
+                'order_list'=>$order_list,
+            ]);
+        }
+        // $orders = OrderProduct::all();
+        // $order_list = Order::where('status', 4)->orderBy("id", "desc")->get() ;
+        // $customers  = CustomerAuth::all();
+        // return view('backend.order.order_delivered', [
+        //     'orders'=>$orders,
+        //     'customers'=>$customers,
+        //     'order_list'=>$order_list,
+        // ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function orderproduct(string $order_id)
-    {
-        // $orders = order::find($order_id);
-        $order_product = orderproduct::where('order_id', $order_id)->get();
-        $billingdetails = billingdetailss::where('order_id', $order_id)->get();
-        $orders = order::where('order_id', $order_id)->get();
-        return view('backend.order.orderproduct', [
-            'order_product'=>$order_product,
+    function order_details($order_id){
+        $order_ids = "#".$order_id;
+        $orders_details = Order::where('order_id', $order_ids)->get();
+        $billingdetails = Billingdetails::where('order_id', $order_ids)->get();
+        $orderproducts = OrderProduct::where('order_id', $order_ids)->get();
+        return view('backend.order.order_details', [
+            'orders_details'=>$orders_details,
             'billingdetails'=>$billingdetails,
-            'orders'=>$orders,
+            'orderproducts'=>$orderproducts,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function order_status(Request $request, $id)
-    {
+    // order_update
+    function order_update(Request $request){
         $after_explode = explode(',', $request->status);
-        order::where('order_id', $after_explode[0])->update([
+        Order::where('order_id', $after_explode[0])->update([
             'status'=>$after_explode[1],
         ]);
 
-        toast('Order status update successfully','success');
+        OrderProduct::where('order_id', $after_explode[0])->update([
+            'status'=>$after_explode[1],
+        ]);
         return back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        order::find($id)->delete();
-
-        toast('Order delete successfully','error');
+    // order.delete
+    function order_delete($order_id){
+        OrderProduct::find($order_id)->delete();
         return back();
     }
-    /**
-     * Remove the specified resource from storage.
-     */
-    // public function orderproduct_destroy( $id)
-    // {
-    //     orderproduct::find($id)->delete();
-    //     toast('Order product delete successfully','error');
-    //     return back();
-    // }
 }
