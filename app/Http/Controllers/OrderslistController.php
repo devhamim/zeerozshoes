@@ -133,7 +133,7 @@ function orders_store(Request $request){
             'customer_phone' => 'required',
             'customer_address' => 'required',
         ]);
-    $order_id = Str::random(3).'-'.rand(1000,9999);
+    $order_id = 'INV'.'-'.rand(1000,9999);
     // Create an order
     $order = Order::create([
         'order_id' => $order_id,
@@ -278,7 +278,7 @@ public function orders_update(Request $request)
     ]);
 
     // If you have an existing order_id, retrieve the order
-    $order_id = $request->input('order_id') ?: Str::random(3) . '-' . rand(1000, 9999);
+    $order_id = $request->input('order_id') ?: 'INV' . '-' . rand(1000, 9999);
     $order = Order::where('order_id', $order_id)->first();
 
     if($request->courier_id == ''){

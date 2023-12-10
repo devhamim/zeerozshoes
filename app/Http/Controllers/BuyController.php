@@ -45,7 +45,7 @@ class BuyController extends Controller
          else
          {
              $products = Product::find($prod_id);
-             $prod_name = $products->product_name;
+             $prod_name = urlencode($products->product_name);
              $prod_slug = $products->slug;
              $prod_image = $products->preview_image;
              $priceval = $products->product_discount;

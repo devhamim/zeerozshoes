@@ -78,7 +78,7 @@
                                 <tbody>
                                     @foreach ($cart_data as $data)
                                     <tr>
-                                        <td><a href="{{ route('product.details', $data['item_slug']) }}">{{ $data['item_name'] }}</a></td>
+                                        <td><a href="{{ route('product.details', $data['item_slug']) }}">{{ urldecode($data['item_name']) }}</a></td>
                                         <td>
                                             ৳ <span class="product-price" style="display: inline">
                                                 {{ isset($data['item_price']) ? $data['item_price'] : $data['product_price'] }}

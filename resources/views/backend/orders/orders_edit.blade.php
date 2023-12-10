@@ -216,7 +216,7 @@
 
                                     {{-- ===================== --}}
                                     <div class="form-group row" style="padding: 6px 0;">
-                                        <label for="sub_total" class="col-md-2 col-form-label text-right">Sub Total</label>
+                                        <label for="sub_total" class="offset-md-6 col-md-2 col-form-label text-right">Sub Total</label>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control" id="sub_total" name="sub_total" min="0" value="{{ $orders->sub_total }}" readonly>
                                         </div>
@@ -246,7 +246,7 @@
 
                                     <div class="form-row">
                                         <div class="form-group col-12">
-                                            <textarea name="order_note" id="order_note" class="form-control" placeholder="Order Note"></textarea>
+                                            <textarea name="order_note" id="order_note" class="form-control" placeholder="Order Note">{{ $orders->order_note }}</textarea>
                                         </div>
                                     </div>
 
@@ -390,28 +390,15 @@
 
                     // Update totals
                     updateTotals();
-
-                    // Add event listener for quantity input change
-                    // $('.qty').on('input', function () {
-                    //     updateRowTotal($(this), data.product_price);
-                    // });
                 }
             });
         });
 
-        // // Function to update the row total when quantity changes
-        // function updateRowTotal(input, productPrice) {
-        //     var quantity = parseFloat(input.val());
-        //     var row = input.closest('tr');
-        //     var totalCell = row.find('.total_price');
-        //     var newTotal = productPrice * quantity;
-        //     totalCell.text(newTotal.toFixed(2));
-
-        //     // Update totals
-        //     updateTotals();
-        // }
         $(document).on('input', '.qty', function () {
             updateRowTotal($(this));
+        });
+        $(document).on('input', '#discount', function () {
+            updateTotals();
         });
 
         function updateRowTotal(input) {
@@ -454,22 +441,40 @@
         }
 
         // Function to update the overall totals
+        // function updateTotals() {
+        //     var subTotal = 0;
+
+        //     // Update sub-total
+        //     $('.total_price').each(function () {
+        //         subTotal += parseFloat($(this).text());
+        //     });
+
+        //     $('#sub_total').val(subTotal.toFixed(2));
+
+        //     // Update total
+        //     var total = subTotal + parseFloat($('#shipping_cost').val()) - parseFloat($('#discount').val());
+        //     $('#total').val(total.toFixed(2));
+
+        //     finalCalc();
+        // }
         function updateTotals() {
-            var subTotal = 0;
+        var subTotal = 0;
 
-            // Update sub-total
-            $('.total_price').each(function () {
-                subTotal += parseFloat($(this).text());
-            });
+        // Update sub-total
+        $('.total_price').each(function () {
+            subTotal += parseFloat($(this).text());
+        });
 
-            $('#sub_total').val(subTotal.toFixed(2));
+        // Assuming that you have a discount input with the ID 'discount'
+        var discount = parseFloat($('#discount').val()) || 0; // Get discount or default to 0
+        var total = subTotal + parseFloat($('#shipping_cost').val()) - discount;
 
-            // Update total
-            var total = subTotal + parseFloat($('#shipping_cost').val()) - parseFloat($('#discount').val());
-            $('#total').val(total.toFixed(2));
+        // Assuming that you have input fields with IDs 'sub_total' and 'total'
+        $('#sub_total').val(subTotal.toFixed(2));
+        $('#total').val(total.toFixed(2));
 
-            finalCalc();
-        }
+        finalCalc();
+    }
 
         // Function to remove a product row
         window.removeProduct = function (button) {

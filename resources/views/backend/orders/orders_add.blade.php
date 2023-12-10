@@ -178,7 +178,7 @@
 
                                     {{-- ===================== --}}
                                     <div class="form-group row" style="padding: 6px 0;">
-                                        <label for="sub_total" class="col-md-2 col-form-label text-right">Sub Total</label>
+                                        <label for="sub_total" class="offset-md-6 col-md-2 col-form-label text-right">Sub Total</label>
                                         <div class="col-md-4">
                                             <input type="text" class="form-control" id="sub_total" name="sub_total" min="0" value="0.00" readonly>
                                         </div>
@@ -345,26 +345,32 @@
 
                     // Update totals
                     updateTotals();
-
-                    // Add event listener for quantity input change
-                    $('.qty').on('input', function () {
-                        updateRowTotal($(this), data.product_price);
-                    });
                 }
             });
         });
 
-        // Function to update the row total when quantity changes
-        function updateRowTotal(input, productPrice) {
-            var quantity = parseFloat(input.val());
+        $(document).on('input', '.qty', function () {
+            updateRowTotal($(this));
+        });
+        $(document).on('input', '#discount', function () {
+            updateTotals();
+        });
+        function updateRowTotal(input) {
             var row = input.closest('tr');
+            var productPrice = parseFloat(row.find('.price').val());
+            var quantity = parseFloat(input.val());
             var totalCell = row.find('.total_price');
             var newTotal = productPrice * quantity;
             totalCell.text(newTotal.toFixed(2));
 
             // Update totals
             updateTotals();
+
+            // Update OrderProduct on the server
+            var productId = row.find('input[name="product_id[]"]').val();
+            updateOrderProduct(productId, quantity);
         }
+       
 
         // Function to update the overall totals
         function updateTotals() {
