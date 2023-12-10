@@ -67,7 +67,7 @@ class ProductController extends Controller
 
         $uploaded_file_one = $request->preview_image;
         $extension = $uploaded_file_one->getClientOriginalExtension();
-        $file_name_one = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000, 9999).'.'.$extension;
+        $file_name_one = Str::random(8).'-'.rand(1000, 9999).'.'.$extension;
         Image::make($uploaded_file_one)->resize(218, 220)->save(public_path('uploads/products/preview/'.$file_name_one));
         Product::find($product_id)->update([
             'preview_image' => $file_name_one,
@@ -78,7 +78,7 @@ class ProductController extends Controller
         $uploaded_thumbnails = $request->gallery_image;
         foreach ($uploaded_thumbnails as $thumbnail) {
             $thumb_extension = $thumbnail->getClientOriginalExtension();
-            $thumb_name = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000,9999).'.'.$thumb_extension;
+            $thumb_name = Str::random(8).'-'.rand(1000,9999).'.'.$thumb_extension;
             Image::make($thumbnail)->resize(458, 458)->save(public_path('uploads/products/gallery/'.$thumb_name));
 
             ProductGallery::insert([
@@ -137,12 +137,9 @@ class ProductController extends Controller
 
         // Preview image
         if($request->preview_image != null) {
-            $image1 = Product::where('id', $request->product_id)->first()->preview_image;
-            $delete_from1 = public_path('uploads/products/preview/'.$image1);
-            unlink($delete_from1);
             $uploaded_file_one = $request->preview_image;
             $extension = $uploaded_file_one->getClientOriginalExtension();
-            $file_name_one = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000, 9999).'.'.$extension;
+            $file_name_one = Str::random(8).'-'.rand(1000, 9999).'.'.$extension;
             Image::make($uploaded_file_one)->resize(218, 220)->save(public_path('uploads/products/preview/'.$file_name_one));
             Product::find($request->product_id)->update([
                 'preview_image' => $file_name_one,
@@ -163,7 +160,7 @@ class ProductController extends Controller
             $uploaded_thumbnails = $request->gallery_image;
             foreach ($uploaded_thumbnails as $thumbnail) {
                 $thumb_extension = $thumbnail->getClientOriginalExtension();
-                $thumb_name = str_replace(' ', '-', Str::lower($request->product_name)).'-'.rand(1000,9999).'.'.$thumb_extension;
+                $thumb_name = Str::random(8).'-'.rand(1000,9999).'.'.$thumb_extension;
                 Image::make($thumbnail)->resize(458, 458)->save(public_path('uploads/products/gallery/'.$thumb_name));
                 ProductGallery::insert([
                     'product_id' => $request->product_id,
