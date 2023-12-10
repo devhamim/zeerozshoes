@@ -179,17 +179,17 @@
                                 <td>{{ $orders->created_at->format('d-M-Y') }}</td>
                                 <td>
                                     <label class="label label-warning">
-                                        @if ($order->status == 0)
+                                        @if ($orders->status == 0)
                                             <div class="badge badge-info">Processing</div>
-                                        @elseif ($order->status == 1)
+                                        @elseif ($orders->status == 1)
                                             <div class="badge badge-primary">On Hold</div>
-                                        @elseif ($order->status == 2)
+                                        @elseif ($orders->status == 2)
                                             <div class="badge badge-success">Completed</div>
-                                        @elseif ($order->status == 3)
+                                        @elseif ($orders->status == 3)
                                             <div class="badge badge-warning">Pending Payment</div>
-                                        @elseif ($order->status == 5)
+                                        @elseif ($orders->status == 5)
                                             <div class="badge badge-default">On Delivary</div>
-                                        @elseif ($order->status == 6)
+                                        @elseif ($orders->status == 6)
                                             <div class="badge badge-dark">Pending Invoice</div>
                                         @else
                                             <div class="badge badge-danger">Canceled</div>

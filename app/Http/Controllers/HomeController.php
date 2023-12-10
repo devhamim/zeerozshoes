@@ -36,7 +36,7 @@ class HomeController extends Controller
             
         $todayOrders = Order::whereDate('created_at', now()->toDateString())->count();
         $product_id = Product::all();
-        $orders_list = Order::all();
+        $orders_list = Order::orderBy('id', 'DESC')->get();
         $products_count = Product::count();
         $users_count = User::count();
         $orders_count = Order::count();
