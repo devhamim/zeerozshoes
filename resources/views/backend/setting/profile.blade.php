@@ -22,7 +22,7 @@
                                 <div class="tab-pane fade show active" id="account-general">
                                     <input type="hidden" name="id" value="{{ $settings->id }}">
                                     <div class="card-body media align-items-center">
-                                        @if ($settings->logo == null) 
+                                        @if ($settings->logo == null)
                                             <img src="{{Avatar::create(Auth::user()->name)->toBase64()}}" class="d-block ui-w-80" alt="">
                                         @else
                                             <img src="{{asset('uploads/setting')}}/{{$settings->logo}}" alt class="d-block ui-w-80">
@@ -42,7 +42,7 @@
                                     </div>
                                     <hr class="border-light m-0">
                                     <div class="card-body media align-items-center">
-                                        @if ($settings->favicon == null) 
+                                        @if ($settings->favicon == null)
                                             <img src="{{Avatar::create(Auth::user()->name)->toBase64()}}" class="d-block ui-w-80" alt="">
                                         @else
                                             <img src="{{asset('uploads/setting')}}/{{$settings->favicon}}" alt class="d-block ui-w-80">
@@ -117,10 +117,18 @@
                                             <label class="form-label">About</label>
                                             <textarea class="form-control" name="about" rows="5" placeholder="Enter your About">{{ $settings->about }}</textarea>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Fb Pixel</label>
+                                            <textarea class="form-control" name="fbpixel" rows="5" placeholder="Enter your Fb Pixel">{{ $settings->fbpixel }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Google Tag</label>
+                                            <textarea class="form-control" name="googletag" rows="5" placeholder="Enter your Google Tag">{{ $settings->googletag }}</textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        
+
                     </div>
                 </div>
             </div>

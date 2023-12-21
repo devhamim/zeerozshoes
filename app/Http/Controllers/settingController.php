@@ -17,7 +17,7 @@ class settingController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -44,12 +44,14 @@ class settingController extends Controller
             'meta_title'=>'',
             'meta_tag'=>'',
             'meta_description'=>'',
+            'fbpixel'=>'',
+            'googletag'=>'',
         ];
-        
+
          /**
          * Handle upload an image
          */
-       
+
         $validatesData = $request->validate($rules);
 
 

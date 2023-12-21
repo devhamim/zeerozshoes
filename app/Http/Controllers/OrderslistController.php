@@ -52,8 +52,8 @@ class OrderslistController extends Controller
             'total_ondelevary'=>$total_ondelevary,
             'total_pendinginvoice'=>$total_pendinginvoice,
         ]);
-    } 
-    
+    }
+
     //orders_list_status
     function orders_list_status($status){
         // $order_id = Order::all();
@@ -128,11 +128,12 @@ class OrderslistController extends Controller
 
     // orders_store
 function orders_store(Request $request){
-        $request->validate([
-            'customer_name' => 'required',
-            'customer_phone' => 'required',
-            'customer_address' => 'required',
-        ]);
+
+    $request->validate([
+        'customer_name' => 'required',
+        'customer_phone' => 'required|max:11',
+        'customer_address' => 'required',
+    ]);
     $order_id = 'INV'.'-'.rand(1000,9999);
     // Create an order
     $order = Order::create([
@@ -158,7 +159,7 @@ function orders_store(Request $request){
         'customer_address' => $request->input('customer_address'),
         'created_at' => Carbon::now(),
     ]);
-    
+
     // Create billing details
     customers::create([
         'customer_name' => $request->input('customer_name'),
@@ -191,12 +192,12 @@ function orders_store(Request $request){
     }
 
     $cities = City::where('status', 1)->where('courier_id', $courierId)->pluck('name', 'id');
-    
+
     $charge = courier::where('id', $courierId)->value('charge');
 
     return response()->json(['cities' => $cities, 'charge' => $charge]);
 }
-    
+
     function getzone(Request $request){
         $zones = courierzone::where('status', 1)->where('city_id', $request->id)->pluck('zone', 'id');
 
@@ -324,7 +325,7 @@ public function orders_update(Request $request)
             'updated_at' => Carbon::now(),
         ]);
     }
-    
+
 
     // Create or update billing details
     Billingdetails::where('order_id',$order_id)->update([

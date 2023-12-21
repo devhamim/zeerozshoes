@@ -34,13 +34,13 @@ class CheckoutController extends Controller
         ]);
     }
 
-    
+
 
     // order_store
     function order_store(Request $request) {
         $request->validate([
             'name' => 'required',
-            'mobile' => 'required',
+            'mobile' => 'required|max:11',
             'address' => 'required',
         ]);
 
@@ -144,6 +144,6 @@ class CheckoutController extends Controller
         // else{
         //     abort(404);
         // }
-        
+
     }
 }

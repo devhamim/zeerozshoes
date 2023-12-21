@@ -39,10 +39,18 @@
     <link rel="stylesheet" href="{{asset('frontend/assets/css/plugins/nouislider/nouislider.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/skins/skin-demo-13.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/demos/demo-13.css')}}">
+<!-- Meta Pixel Code -->
+@if($setting->first()->fbpixel != null)
+    {!! $setting->first()->fbpixel !!}
+@endif
+{{-- <!-- End Meta Pixel Code --> --}}
 
+<!-- googletag Code -->
+@if($setting->first()->googletag != null)
+    {!! $setting->first()->googletag !!}
+@endif
+<!-- End googletag Code -->
 
-    <!-- <link rel="stylesheet" href="assets/css/skins/skin-demo-24.css">
-    <link rel="stylesheet" href="assets/css/demos/demo-24.css"> -->
 </head>
 
 <body>

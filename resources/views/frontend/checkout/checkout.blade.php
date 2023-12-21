@@ -20,7 +20,7 @@
 <div class="page-content mt-3">
     <div class="checkout">
         <div class="container">
-        
+
             @if (isset($cart_data))
             @if(Cookie::get('shopping_cart'))
             @php
@@ -42,6 +42,9 @@
                                 <div class="col-lg-12">
                                     <label>আপনার মোবাইল *</label>
                                     <input type="tel" name="mobile" class="form-control" required="" value="{{ old('mobile') }}">
+                                    @error('mobile')
+                                        <strong class="text-danger">{{$message}}</strong>
+                                    @enderror
                                 </div><!-- End .col-sm-6 -->
                             </div><!-- End .row -->
                             <div class="row">
@@ -58,11 +61,11 @@
                                     </button>
                                 </div><!-- End .col-sm-6 -->
                             </div><!-- End .row -->
-                            
+
                     </div><!-- End .col-lg-9 -->
                     <aside class="col-lg-7">
                         <div class="summary">
-                
+
                             <h3 class="summary-title">অর্ডার ইনফরমেশন</h3><!-- End .summary-title -->
 
                             <table class="table table-summary">
@@ -84,7 +87,7 @@
                                                 {{ isset($data['item_price']) ? $data['item_price'] : $data['product_price'] }}
                                             </span> X
                                         </td>
-                                        <td class="ps-3 text-center mt-2" style="padding-top: 15px; justify-content: center; width: 15%; margin: 0 auto"> 
+                                        <td class="ps-3 text-center mt-2" style="padding-top: 15px; justify-content: center; width: 15%; margin: 0 auto">
                                             <input type="number" name="quantity[{{ $data['item_id'] }}]" class="qty-input form-control mx-2" value="{{ $data['item_quantity'] }}" min="1" max="100" step="1" data-decimals="0" required>
                                         </td>
                                         <td>
@@ -101,7 +104,7 @@
                                             $total = $total + ($data["item_quantity"] * $data["product_price"]);
                                         }
                                     @endphp
-                                    
+
                                     @endforeach
 
                                     <tr class="summary-total">
@@ -139,8 +142,8 @@
             @else
             <h2 class="text-danger m-auto text-center mt-5">No product added for checkout</h2>
             @endif
-            
-            
+
+
         </div><!-- End .container -->
     </div><!-- End .checkout -->
 </div>
@@ -196,7 +199,7 @@ function removeProduct(button) {
             // alert(coupon_code);
             // console.log(coupon_code);
             // die();
-            
+
 
             if($.trim(coupon_code).length == 0) {
                 error_coupon = "Please enter valid coupon";
@@ -236,6 +239,6 @@ function removeProduct(button) {
                     }
                 }
             })
-        }) 
+        })
     </script>
 @endsection

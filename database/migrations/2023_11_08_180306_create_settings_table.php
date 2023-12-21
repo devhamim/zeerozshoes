@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('meta_tag')->nullable();
             $table->string('meta_description')->nullable();
             $table->string('about')->nullable();
+            $table->string('fbpixel')->nullable();
+            $table->string('googletag')->nullable();
             $table->timestamps();
         });
     }
